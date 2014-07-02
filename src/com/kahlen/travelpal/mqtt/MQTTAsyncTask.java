@@ -38,7 +38,7 @@ public class MQTTAsyncTask extends AsyncTask<Object, Void, Exception> {
 					// set clean session to false so that when reconnected, it gets messages happen when the connection was lost
 					options.setCleanSession( false );
 					options.setKeepAliveInterval(30);
-					mClient.setCallback(new MQTTCallBack(mContext, callback));
+//					mClient.setCallback(new MQTTCallBack(mContext, callback));
 					mClient.connect( options );
 		        } catch (MqttException e) {
 		            e.printStackTrace();

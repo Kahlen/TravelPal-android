@@ -72,6 +72,10 @@ public class MQTTClientController implements MQTTTaskHandler {
 		MQTTAsyncTask task = new MQTTAsyncTask( mContext, mClient, this );
 		task.execute( new Object[]{MQTTAsyncTask.TaskType.publish, topic, message, qos} );
 	}
+	
+	public void registerCallback( MQTTCallBack callback ) {
+		mClient.setCallback( callback );
+	}
 
 	@Override
 	public void connectionFail( Exception e ) {

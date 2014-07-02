@@ -11,5 +11,14 @@
     <string name="check">Check</string>
 	<string name="connected">Connected</string>
     <string name="not_connected">Not connected</string>
+    <string name="send">Send</string>
+    <string name="server">Server</string>
+    <string name="ok">OK</string>
+    
+    <!-- menu -->
+    <string name="dis_connect">Connect/Disconnect</string>
+    <string name="dialog_title_subscribe">Title</string>
+    <string name="dialog_message_subscribe">Please input what topic you want to subscribe:</string>
+    <string name="dialog_message_server">Please input the server IP:</string>
     
 </resources>

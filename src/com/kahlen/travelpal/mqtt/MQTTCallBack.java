@@ -68,7 +68,7 @@ public class MQTTCallBack implements MqttCallback {
 		
 		if ( MyApplication.isActivityVisible() ) {
 			if ( mActivityCallBack != null ) {
-				mActivityCallBack.messageReceived( new String(message.getPayload(), "UTF-8") );
+				mActivityCallBack.messageReceived( topic, new String(message.getPayload(), "UTF-8") );
 			} else {
 				Log.d("kahlen", "Message arrived: " + new String(message.getPayload(), "UTF-8") );
 			}

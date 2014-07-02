@@ -9,59 +9,40 @@
     tools:context=".MainActivity" 
     android:orientation="vertical">
     
-   <LinearLayout
+    <RelativeLayout 
         android:layout_width="match_parent"
-    	android:layout_height="wrap_content"
-    	android:orientation="horizontal">
+        android:layout_height="match_parent">
         
-        <Button 
-	        android:id="@+id/main_connect_btn"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:text="@string/connect"/>
+        <LinearLayout
+            android:id="@+id/input_container"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:orientation="horizontal"
+			android:layout_alignParentBottom="true">
+           
+	        <EditText 
+				android:id="@+id/chat_msg_txt"
+				android:layout_width="0dp"
+				android:layout_height="wrap_content"
+				android:layout_weight="3"
+				android:inputType="text"/>
+	       
+			<Button 
+				android:id="@+id/chat_send_btn"
+			    android:layout_width="0dp"
+			    android:layout_height="wrap_content"
+			    android:layout_weight="1"
+			    android:text="@string/send"/>
+           
+		</LinearLayout>
         
-        <Button 
-	        android:id="@+id/main_subscribe_btn"
-	        android:layout_width="wrap_content"
+        <ListView
+	        android:id="@+id/chat_content"
 	        android:layout_height="wrap_content"
-	        android:text="@string/subscribe"/>
-       
-    </LinearLayout>
+	        android:layout_width="match_parent"
+	        android:layout_above="@id/input_container"/>
+
+    </RelativeLayout>
     
-    <EditText 
-        android:id="@+id/main_publish_txt"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:inputType="text"/>
-    
-    <Button 
-        android:id="@+id/main_publish_btn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/publish"/>
-    
-    <TextView
-        android:id="@+id/main_push_content"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
-    
-    <LinearLayout
-        android:layout_width="match_parent"
-    	android:layout_height="wrap_content"
-    	android:orientation="horizontal">
-        
-        <Button 
-	        android:id="@+id/main_check_connection_btn"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:text="@string/check"/>
-        
-        <TextView
-            android:id="@+id/main_check_connection_txt"
-            android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:text="@string/not_connected"/>
-       
-    </LinearLayout>
 
 </LinearLayout>
