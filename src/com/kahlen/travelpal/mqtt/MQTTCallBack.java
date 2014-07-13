@@ -4,7 +4,7 @@ import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
 import org.eclipse.paho.client.mqttv3.MqttCallback;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 
-import com.kahlen.travelpal.MainActivity;
+import com.kahlen.travelpal.DrawerActivity;
 import com.kahlen.travelpal.MyApplication;
 import com.kahlen.travelpal.R;
 import com.kahlen.travelpal.utilities.ConnectivityUtils;
@@ -73,7 +73,7 @@ public class MQTTCallBack implements MqttCallback {
 				Log.d("kahlen", "Message arrived: " + new String(message.getPayload(), "UTF-8") );
 			}
 		} else {
-			Intent resultIntent = new Intent(mContext, MainActivity.class);
+			Intent resultIntent = new Intent(mContext, DrawerActivity.class);
 			resultIntent.putExtra("topic", topic);
 			resultIntent.putExtra("message", new String(message.getPayload(), "UTF-8"));
 			PendingIntent resultPendingIntent =

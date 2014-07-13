@@ -34,4 +34,7 @@
     <string name="dialog_message_subscribe">Please input what topic you want to subscribe:</string>
     <string name="dialog_message_server">Please input the server IP:</string>
     
+    <!-- Log in page -->
+    <string name="login">Log in</string>
+    
 </resources>
