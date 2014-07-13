@@ -5,14 +5,11 @@
     <string name="action_settings">Settings</string>
     
     <string-array name="activity_titles">
-        <item>Mercury</item>
-        <item>Venus</item>
-        <item>Earth</item>
-        <item>Mars</item>
-        <item>Jupiter</item>
-        <item>Saturn</item>
-        <item>Uranus</item>
-        <item>Neptune</item>
+        <item>Home</item>
+        <item>My Trips</item>
+        <item>New Trip</item>
+        <item>Find Friends</item>
+        <item>Me</item>
     </string-array>
     <string name="drawer_open">Open navigation drawer</string>
     <string name="drawer_close">Close navigation drawer</string>

@@ -1,5 +1,7 @@
 package com.kahlen.travelpal;
 
+import com.kahlen.travelpal.chat.FindFriendFragment;
+
 import android.os.Bundle;
 import android.app.Activity;
 import android.app.Fragment;
@@ -8,6 +10,7 @@ import android.content.Context;
 import android.content.res.Configuration;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.widget.DrawerLayout;
+import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.widget.AdapterView;
@@ -115,6 +118,24 @@ public class DrawerActivity extends Activity {
     }
 
     private void selectItem(int position) {
+    	Log.d("kahlen", "select item: " + position);
+    	if ( position == 3 ) {
+    		// update the main content by replacing fragments
+            Fragment fragment = new FindFriendFragment();
+            Bundle args = new Bundle();
+            args.putInt(MainFragment.ARG_PLANET_NUMBER, position);
+            fragment.setArguments(args);
+
+            FragmentManager fragmentManager = getFragmentManager();
+            fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
+
+            // update selected item and title, then close the drawer
+            mDrawerList.setItemChecked(position, true);
+            setTitle(mPlanetTitles[position]);
+            mDrawerLayout.closeDrawer(mDrawerList);
+            return;
+    	}
+    	
         // update the main content by replacing fragments
         Fragment fragment = new MainFragment();
         Bundle args = new Bundle();

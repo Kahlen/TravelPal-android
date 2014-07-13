@@ -6,4 +6,6 @@ public class MQTTConfiguration {
 	
 	// server http request
 	public static String SERVER_URL = "http://localhost:9000";
+	public static String LOGIN_URI = SERVER_URL + "/login";
+	public static String FIND_FRIENDS_URI = SERVER_URL + "/searchf";
 }

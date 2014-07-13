@@ -27,7 +27,7 @@ public class UserLoginTask extends AsyncTask<JSONObject, Void, Integer> {
 		    DefaultHttpClient httpclient = new DefaultHttpClient();
 
 		    //url with the post data
-		    String path = MQTTConfiguration.SERVER_URL + "/login";
+		    String path = MQTTConfiguration.LOGIN_URI;
 		    HttpPost httpost = new HttpPost(path);
 
 		    //convert parameters into JSON object
@@ -46,7 +46,13 @@ public class UserLoginTask extends AsyncTask<JSONObject, Void, Integer> {
 
 		    //Handles what is returned from the page 
 		    HttpResponse response = httpclient.execute(httpost);
-		    return response.getStatusLine().getStatusCode();
+		    int status = response.getStatusLine().getStatusCode();
+		    if ( status == 200 ) {
+		    	UserInfo.setUser( holder.getString("_id") );
+		    }
+		    Log.d("kahlen", "log in status = " + status);
+		    
+		    return status;
 		    
 		} catch ( Exception e ) {
 			e.printStackTrace();
