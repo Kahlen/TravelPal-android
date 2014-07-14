@@ -13,6 +13,7 @@ public class MQTTService extends Service {
 	public static String ACTION_CONNECT = "com.kahlen.travelpal.connect";
 	public static String ACTION_DISCONNECT = "com.kahlen.travelpal.disconnect";
 	public static String ACTION_SUBSCRIBE = "com.kahlen.travelpal.subscribe";
+	public static String ACTION_CONNECT_N_SUBSCRIBE = "com.kahlen.travelpal.connectnsubscribe";
 	
 	public static String INTENT_EXTRA_SUBSCRIBE_TOPIC = "subscribe_topic";
 
@@ -33,6 +34,13 @@ public class MQTTService extends Service {
 			mController.disconnectMQTTServer();
 			stopSelf();
 		} else if ( ACTION_SUBSCRIBE.equals(action) ) {
+			String topic = intent.getStringExtra( INTENT_EXTRA_SUBSCRIBE_TOPIC );
+			if ( topic != null )
+				mController.subscribeTopic(topic);
+			else
+				mController.subscribeTopic("hello");
+		} else if ( ACTION_CONNECT_N_SUBSCRIBE.equals(action) ) {
+			mController.connectMQTTServer();
 			String topic = intent.getStringExtra( INTENT_EXTRA_SUBSCRIBE_TOPIC );
 			if ( topic != null )
 				mController.subscribeTopic(topic);

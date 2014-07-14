@@ -1,7 +1,6 @@
 package com.kahlen.travelpal.chat;
 
 import java.io.BufferedReader;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 
 import org.apache.http.HttpResponse;

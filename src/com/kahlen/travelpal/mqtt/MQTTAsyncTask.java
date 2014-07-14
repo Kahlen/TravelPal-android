@@ -84,11 +84,10 @@ public class MQTTAsyncTask extends AsyncTask<Object, Void, Exception> {
 					String topic = (String) params[1];
 					String message = (String) params[2];
 					int qos = (Integer) params[3];
-					
+					Log.d("kahlen", "publish(" + topic + ", " + qos + "): " + message );
 					MqttTopic mTopic = mClient.getTopic(topic);
 					MqttMessage mMessage = new MqttMessage(message.getBytes());
 					mMessage.setQos(qos);
-					
 					mTopic.publish(mMessage);
 				} catch (MqttPersistenceException e) {
 					e.printStackTrace();

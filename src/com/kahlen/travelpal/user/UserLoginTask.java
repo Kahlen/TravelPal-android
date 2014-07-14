@@ -47,7 +47,7 @@ public class UserLoginTask extends AsyncTask<JSONObject, Void, Integer> {
 		    //Handles what is returned from the page 
 		    HttpResponse response = httpclient.execute(httpost);
 		    int status = response.getStatusLine().getStatusCode();
-		    if ( status == 200 ) {
+		    if ( status == HttpStatus.SC_OK ) {
 		    	UserInfo.setUser( holder.getString("_id") );
 		    }
 		    Log.d("kahlen", "log in status = " + status);
