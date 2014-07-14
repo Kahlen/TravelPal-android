@@ -4,6 +4,8 @@ import org.eclipse.paho.client.mqttv3.MqttClient;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 
+import com.kahlen.travelpal.user.UserInfo;
+
 import android.content.Context;
 import android.widget.Toast;
 
@@ -17,7 +19,7 @@ public class MQTTClientController implements MQTTTaskHandler {
 		mContext = context;
 		try {
 //			MqttDefaultFilePersistence persistence = new MqttDefaultFilePersistence("/kahlen");
-			mClient = new MqttClient(MQTTConfiguration.BROKER_URL, MQTTConfiguration.CLIENT_ID, new MemoryPersistence());
+			mClient = new MqttClient(MQTTConfiguration.BROKER_URL, UserInfo.getUserId(), new MemoryPersistence());
 		} catch (MqttException e) {
 			Toast.makeText(mContext, "Something went wrong!" + e.getMessage(), Toast.LENGTH_LONG).show();
 			e.printStackTrace();

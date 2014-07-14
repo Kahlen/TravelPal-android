@@ -4,6 +4,7 @@ package com.kahlen.travelpal.chat;
 import com.kahlen.travelpal.R;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,13 +28,17 @@ public class ChatAdapter extends ArrayAdapter<ChatMessageModel> {
 		if ( convertView == null )
 			convertView = inflater.inflate( R.layout.chat_message_list_item , parent, false );
 		
-		if ( msg.me ) {
-			convertView.setBackgroundColor( mContext.getResources().getColor( android.R.color.background_light ) );
-		} else {
-			convertView.setBackgroundColor( mContext.getResources().getColor( android.R.color.background_dark ) );
-		}
 		TextView textView = (TextView) convertView.findViewById( R.id.chat_item_txt );
 		textView.setText( msg.message );
+		Log.d("kahlen", "msg.me = " + msg.me);
+		if ( msg.me ) {
+			convertView.setBackgroundColor( mContext.getResources().getColor( android.R.color.background_light ) );
+			textView.setTextColor( mContext.getResources().getColor( R.color.red ) );
+		} else {
+			convertView.setBackgroundColor( mContext.getResources().getColor( android.R.color.background_dark ) );
+			textView.setTextColor( mContext.getResources().getColor( R.color.blue ) );
+		}
+		
 		
 		return convertView;
 	}

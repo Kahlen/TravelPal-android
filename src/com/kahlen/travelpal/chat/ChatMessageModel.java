@@ -1,6 +1,7 @@
 package com.kahlen.travelpal.chat;
 
 import com.kahlen.travelpal.mqtt.MQTTConfiguration;
+import com.kahlen.travelpal.user.UserInfo;
 
 public class ChatMessageModel {
 	public String message;
@@ -11,13 +12,13 @@ public class ChatMessageModel {
 	public ChatMessageModel() {
 		message = "";
 		me = true;
-		senderId = MQTTConfiguration.CLIENT_ID;
+		senderId = UserInfo.getUserId();
 	}
 	
 	public ChatMessageModel( String msg ) {
 		message = msg;
 		me = true;
-		senderId = MQTTConfiguration.CLIENT_ID;
+		senderId = UserInfo.getUserId();
 	}
 	
 	public ChatMessageModel( String msg, boolean m, String id ) {

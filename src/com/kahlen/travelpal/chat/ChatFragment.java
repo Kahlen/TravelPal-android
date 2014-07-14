@@ -90,13 +90,15 @@ public class ChatFragment extends Fragment implements MQTTActivityCallBack {
 	public void messageReceived( String topic, String message ) {
 		final ChatMessageModel msg = new ChatMessageModel();
 		msg.message = message;
+		Log.d("kahlen", "receive topic: " + topic);
 		
 		// TODO: define topic and sender id
-		if ( MQTTConfiguration.CLIENT_ID.equals( topic ) ) {
-			msg.me = true;
-			msg.senderId = MQTTConfiguration.CLIENT_ID;
+		if ( topic.startsWith( UserInfo.getUserId() ) ) {
+			msg.me = false;
+			msg.senderId = topic.split("/")[1];
 		} else {
-			msg.senderId = topic;
+			msg.me = true;
+			msg.senderId = UserInfo.getUserId();
 		}
 		
 		Log.d("kahlen", "new message --- " + message);
