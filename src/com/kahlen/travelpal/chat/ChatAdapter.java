@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 public class ChatAdapter extends ArrayAdapter<ChatMessageModel> {
@@ -30,12 +31,12 @@ public class ChatAdapter extends ArrayAdapter<ChatMessageModel> {
 		
 		TextView textView = (TextView) convertView.findViewById( R.id.chat_item_txt );
 		textView.setText( msg.message );
-		Log.d("kahlen", "msg.me = " + msg.me);
+		
 		if ( msg.me ) {
-			convertView.setBackgroundColor( mContext.getResources().getColor( android.R.color.background_light ) );
+//			convertView.setBackgroundColor( mContext.getResources().getColor( android.R.color.background_light ) );
 			textView.setTextColor( mContext.getResources().getColor( R.color.red ) );
 		} else {
-			convertView.setBackgroundColor( mContext.getResources().getColor( android.R.color.background_dark ) );
+//			convertView.setBackgroundColor( mContext.getResources().getColor( android.R.color.background_dark ) );
 			textView.setTextColor( mContext.getResources().getColor( R.color.blue ) );
 		}
 		

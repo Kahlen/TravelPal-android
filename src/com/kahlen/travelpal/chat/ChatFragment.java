@@ -1,7 +1,5 @@
 package com.kahlen.travelpal.chat;
 
-import java.util.ArrayList;
-
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -57,8 +55,6 @@ public class ChatFragment extends Fragment implements MQTTActivityCallBack, Chat
 	    return mRootView;
 	}
 
-
-	
 	protected void setupContent() {
 		super.onResume();
 
@@ -170,6 +166,5 @@ public class ChatFragment extends Fragment implements MQTTActivityCallBack, Chat
 		    }
 		});
 	}
-	
 
 }

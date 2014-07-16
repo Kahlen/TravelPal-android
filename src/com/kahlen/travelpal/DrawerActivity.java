@@ -6,6 +6,7 @@ import com.kahlen.travelpal.mqtt.MQTTActivityCallBack;
 import com.kahlen.travelpal.mqtt.MQTTCallBack;
 import com.kahlen.travelpal.mqtt.MQTTClientController;
 import com.kahlen.travelpal.mqtt.MQTTConfiguration;
+import com.kahlen.travelpal.mqtt.MQTTErrorCallBack;
 import com.kahlen.travelpal.mqtt.MQTTService;
 import com.kahlen.travelpal.user.UserInfo;
 
@@ -30,7 +31,7 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
-public class DrawerActivity extends Activity implements FindFriendFragment.FindFriendListener, MQTTActivityCallBack {
+public class DrawerActivity extends Activity implements FindFriendFragment.FindFriendListener, MQTTActivityCallBack, MQTTErrorCallBack {
 	
 	private Context mContext;
 	
@@ -51,7 +52,7 @@ public class DrawerActivity extends Activity implements FindFriendFragment.FindF
 		mTitle = mDrawerTitle = getTitle();
 		mContext = getApplicationContext();
 		setContentView(R.layout.activity_root);
-		
+
 		mPlanetTitles = getResources().getStringArray(R.array.activity_titles);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerList = (ListView) findViewById(R.id.left_drawer);
@@ -87,7 +88,14 @@ public class DrawerActivity extends Activity implements FindFriendFragment.FindF
         };
         mDrawerLayout.setDrawerListener(mDrawerToggle);
 
-        if (savedInstanceState == null) {
+        Intent intent = getIntent();
+		boolean fromNewMessage = intent.getBooleanExtra("new_message", false);
+		if ( fromNewMessage ) {
+			// get new message when in
+			String topic = intent.getStringExtra("topic");
+			String friendId = topic.split("/")[1];
+			friendIdSelected(friendId);
+		} else if (savedInstanceState == null) {
             selectItem(0);
         }
         
@@ -212,8 +220,14 @@ public class DrawerActivity extends Activity implements FindFriendFragment.FindF
 	
 	@Override
 	public void messageReceived(String topic, String message) {
+		Log.d("kahlen", "--- messageReceived in DrawerActivity ---");
 		ChatFragment chatFrg = (ChatFragment) getFragmentManager().findFragmentById(R.id.content_frame);
 		chatFrg.messageReceived(topic, message);
+	}
+	
+	@Override
+	public void mqttFail(String errorMsg) {
+		Toast.makeText(mContext, errorMsg, Toast.LENGTH_LONG).show();
 	}
 	
 	// --- menu ---

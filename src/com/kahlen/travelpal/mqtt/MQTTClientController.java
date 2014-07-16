@@ -7,13 +7,13 @@ import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 import com.kahlen.travelpal.user.UserInfo;
 
 import android.content.Context;
-import android.widget.Toast;
 
 public class MQTTClientController implements MQTTTaskHandler {
 
 	private static MqttClient mClient;
 	private static Context mContext;
 	private static MQTTClientController mController = null;
+	private static MQTTErrorCallBack mErrorCallback;
 	
 	private MQTTClientController( Context context ) {
 		mContext = context;
@@ -21,7 +21,9 @@ public class MQTTClientController implements MQTTTaskHandler {
 //			MqttDefaultFilePersistence persistence = new MqttDefaultFilePersistence("/kahlen");
 			mClient = new MqttClient(MQTTConfiguration.BROKER_URL, UserInfo.getUserId(), new MemoryPersistence());
 		} catch (MqttException e) {
-			Toast.makeText(mContext, "Something went wrong!" + e.getMessage(), Toast.LENGTH_LONG).show();
+			if ( mErrorCallback != null ) {
+				mErrorCallback.mqttFail( "Something went wrong!" + e.getMessage() );
+			}
 			e.printStackTrace();
 		}
 
@@ -67,7 +69,7 @@ public class MQTTClientController implements MQTTTaskHandler {
 	public void publishOnTopic( String topic, String message, int qos ) {
 		if ( !mClient.isConnected() ) {
 			// client is not connected
-			Toast.makeText(mContext, "Client is not connected", Toast.LENGTH_LONG).show();
+			mErrorCallback.mqttFail( "Client is not connected" );
 			return;
 		}
 		
@@ -82,9 +84,15 @@ public class MQTTClientController implements MQTTTaskHandler {
 	@Override
 	public void connectionFail( Exception e ) {
 		if ( e != null ) {
-			Toast.makeText(mContext, "Something went wrong!" + e.getMessage(), Toast.LENGTH_LONG).show();
 			e.printStackTrace();
+			if ( mErrorCallback != null ) {
+				mErrorCallback.mqttFail( "Something went wrong!" + e.getMessage() );
+			}
 		}
+	}
+	
+	public void setErrorCallback( MQTTErrorCallBack callback ) {
+		mErrorCallback = callback;
 	}
 	
 }

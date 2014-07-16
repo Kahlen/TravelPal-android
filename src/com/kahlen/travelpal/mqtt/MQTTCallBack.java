@@ -74,6 +74,7 @@ public class MQTTCallBack implements MqttCallback {
 			}
 		} else {
 			Intent resultIntent = new Intent(mContext, DrawerActivity.class);
+			resultIntent.putExtra("new_message", true);
 			resultIntent.putExtra("topic", topic);
 			resultIntent.putExtra("message", new String(message.getPayload(), "UTF-8"));
 			PendingIntent resultPendingIntent =
