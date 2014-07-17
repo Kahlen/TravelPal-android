@@ -1,5 +1,6 @@
 package com.kahlen.travelpal.mqtt;
 
+import org.eclipse.paho.client.mqttv3.MqttCallback;
 import org.eclipse.paho.client.mqttv3.MqttClient;
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.eclipse.paho.client.mqttv3.MqttException;
@@ -33,12 +34,12 @@ public class MQTTAsyncTask extends AsyncTask<Object, Void, Exception> {
 			case connect:
 				
 				try {
-					MQTTActivityCallBack callback = (MQTTActivityCallBack) params[1];
+					MqttCallback callback = (MqttCallback) params[1];
 					MqttConnectOptions options = new MqttConnectOptions();
 					// set clean session to false so that when reconnected, it gets messages happen when the connection was lost
 					options.setCleanSession( false );
 					options.setKeepAliveInterval(30);
-//					mClient.setCallback(new MQTTCallBack(mContext, callback));
+					mClient.setCallback(callback);
 					mClient.connect( options );
 		        } catch (MqttException e) {
 		            e.printStackTrace();

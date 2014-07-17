@@ -3,11 +3,10 @@ package com.kahlen.travelpal;
 import com.kahlen.travelpal.chat.ChatFragment;
 import com.kahlen.travelpal.chat.FindFriendFragment;
 import com.kahlen.travelpal.mqtt.MQTTActivityCallBack;
-import com.kahlen.travelpal.mqtt.MQTTCallBack;
-import com.kahlen.travelpal.mqtt.MQTTClientController;
 import com.kahlen.travelpal.mqtt.MQTTConfiguration;
 import com.kahlen.travelpal.mqtt.MQTTErrorCallBack;
 import com.kahlen.travelpal.mqtt.MQTTService;
+import com.kahlen.travelpal.mqtt.MQTTServiceDelegate;
 import com.kahlen.travelpal.user.UserInfo;
 
 import android.os.Bundle;
@@ -43,8 +42,6 @@ public class DrawerActivity extends Activity implements FindFriendFragment.FindF
     private CharSequence mTitle;
     private String[] mPlanetTitles;
     
-    MQTTClientController mController = MQTTClientController.getInstance( mContext );
-
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -114,6 +111,7 @@ public class DrawerActivity extends Activity implements FindFriendFragment.FindF
 	protected void onPause() {
 		super.onPause();
 		MyApplication.activityPaused();
+		MQTTServiceDelegate.unregisterActivityCallback(this);
 	}
 
 
@@ -206,23 +204,22 @@ public class DrawerActivity extends Activity implements FindFriendFragment.FindF
 	
 	// --- MQTT ---
 	private void connect2Mqtt() {
-		if ( !mController.isConnected() ) {
-			mController.registerCallback( new MQTTCallBack(mContext, this) );
-			// start service
-			Intent intent = new Intent(mContext, MQTTService.class);
-			intent.setAction( MQTTService.ACTION_CONNECT_N_SUBSCRIBE );
-			// subscribe to everything sent to this user
-			// topic = me/#
-			intent.putExtra( MQTTService.INTENT_EXTRA_SUBSCRIBE_TOPIC, UserInfo.getUserId() + "/#" );
-	        mContext.startService(intent);	
-		}
+		MQTTServiceDelegate.registerActivityCallback( this );
+		// start service
+		Intent intent = new Intent(mContext, MQTTService.class);
+		intent.setAction( MQTTService.ACTION_CONNECT_N_SUBSCRIBE );
+		// subscribe to everything sent to this user
+		// topic = me/#
+		intent.putExtra( MQTTService.INTENT_EXTRA_SUBSCRIBE_TOPIC, UserInfo.getUserId() + "/#" );
+        mContext.startService(intent);
 	}
 	
 	@Override
 	public void messageReceived(String topic, String message) {
 		Log.d("kahlen", "--- messageReceived in DrawerActivity ---");
-		ChatFragment chatFrg = (ChatFragment) getFragmentManager().findFragmentById(R.id.content_frame);
-		chatFrg.messageReceived(topic, message);
+		// TODO: what to do in DrawerActivity?
+//		ChatFragment chatFrg = (ChatFragment) getFragmentManager().findFragmentById(R.id.content_frame);
+//		chatFrg.messageReceived(topic, message);
 	}
 	
 	@Override
@@ -243,57 +240,40 @@ public class DrawerActivity extends Activity implements FindFriendFragment.FindF
 		
 		switch( item.getItemId() ) {
 			case R.id.menu_connect:
-				if ( mController.isConnected() ) {
-					// disconnect
-					
-					// stop service
-					Intent intent = new Intent(mContext, MQTTService.class);
-					intent.setAction( MQTTService.ACTION_DISCONNECT );
-			        mContext.startService(intent);
-				} else {
-					// connect
-					
-//					registerListener();
-					// start service
-					Intent intent = new Intent(mContext, MQTTService.class);
-					intent.setAction( MQTTService.ACTION_CONNECT );
-			        mContext.startService(intent);	
-			        
-				}
+				// start service
+				Intent intent = new Intent(mContext, MQTTService.class);
+				intent.setAction( MQTTService.ACTION_CONNECT );
+		        mContext.startService(intent);	
 				
 				break;
 			case R.id.menu_subscribe:
 				// show popup input dialog
-				if ( mController.isConnected() ) {
-					// use Activity.this for AlertDialog to avoid exception
-					// alertdialog Unable to add window -- token null is not for an application
-					AlertDialog.Builder alert = new AlertDialog.Builder( DrawerActivity.this );
-					alert.setTitle( R.string.dialog_title_subscribe );
-					alert.setMessage( R.string.dialog_message_subscribe );
-					final EditText input = new EditText( mContext );
-					alert.setView(input);
-					alert.setPositiveButton( R.string.ok , new DialogInterface.OnClickListener() {
-						public void onClick(DialogInterface dialog, int whichButton) {
-							String topic = input.getText().toString();
-							// subscribe
-							Intent intent = new Intent(mContext, MQTTService.class);
-							intent.setAction( MQTTService.ACTION_SUBSCRIBE );
-							intent.putExtra( MQTTService.INTENT_EXTRA_SUBSCRIBE_TOPIC, topic );
-					        mContext.startService(intent);	
-						}
-					});
-					alert.show();
-				} else {
-					Toast.makeText(mContext, R.string.not_connected, Toast.LENGTH_LONG).show();
-				}
+				// use Activity.this for AlertDialog to avoid exception
+				// alertdialog Unable to add window -- token null is not for an application
+				AlertDialog.Builder alert = new AlertDialog.Builder( DrawerActivity.this );
+				alert.setTitle( R.string.dialog_title_subscribe );
+				alert.setMessage( R.string.dialog_message_subscribe );
+				final EditText input = new EditText( mContext );
+				alert.setView(input);
+				alert.setPositiveButton( R.string.ok , new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int whichButton) {
+						String topic = input.getText().toString();
+						// subscribe
+						Intent intent = new Intent(mContext, MQTTService.class);
+						intent.setAction( MQTTService.ACTION_SUBSCRIBE );
+						intent.putExtra( MQTTService.INTENT_EXTRA_SUBSCRIBE_TOPIC, topic );
+				        mContext.startService(intent);	
+					}
+				});
+				alert.show();
 				
 				break;
 			case R.id.menu_check_connection:
 				// check connection, show toast message
-				if ( mController.isConnected() )
-					Toast.makeText(mContext, R.string.connected, Toast.LENGTH_LONG).show();
-				else
-					Toast.makeText(mContext, R.string.not_connected, Toast.LENGTH_LONG).show();
+//				if ( mController.isConnected() )
+//					Toast.makeText(mContext, R.string.connected, Toast.LENGTH_LONG).show();
+//				else
+//					Toast.makeText(mContext, R.string.not_connected, Toast.LENGTH_LONG).show();
 				break;
 			case R.id.menu_server:
 				AlertDialog.Builder alert2 = new AlertDialog.Builder( DrawerActivity.this );

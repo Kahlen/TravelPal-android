@@ -38,6 +38,22 @@
                     
         <service android:name=".mqtt.MQTTService"/>
         
+        <receiver android:name=".mqtt.MQTTServiceDelegate$MessageReceiver" >
+            <intent-filter>
+                <action android:name="com.kahlen.travelpal.MESSAGE_ARRIVED" />
+            </intent-filter>
+        </receiver>
+        <receiver android:name=".mqtt.MQTTServiceDelegate$ConnectionErrorReceiver">
+            <intent-filter>
+                <action android:name="com.kahlen.travelpal.CONNECTION_ERROR" />
+            </intent-filter>
+        </receiver>
+        <receiver android:name=".utilities.ConnectivityUtils$IntenetStateReceiver">
+            <intent-filter>
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+            </intent-filter>
+        </receiver>
+        
     </application>
 
 </manifest>

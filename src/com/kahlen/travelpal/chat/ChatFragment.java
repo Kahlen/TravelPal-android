@@ -5,13 +5,14 @@ import org.json.JSONObject;
 
 import com.kahlen.travelpal.R;
 import com.kahlen.travelpal.mqtt.MQTTActivityCallBack;
-import com.kahlen.travelpal.mqtt.MQTTCallBack;
-import com.kahlen.travelpal.mqtt.MQTTClientController;
+import com.kahlen.travelpal.mqtt.MQTTService;
+import com.kahlen.travelpal.mqtt.MQTTServiceDelegate;
 import com.kahlen.travelpal.user.UserInfo;
 
 import android.os.Bundle;
 import android.app.Fragment;
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,7 +25,6 @@ import android.widget.ListView;
 public class ChatFragment extends Fragment implements MQTTActivityCallBack, ChatHistoryCallback {
 	
 	private Context mContext;
-	private MQTTClientController mController;
 	private ListView mListView;
 	private ChatAdapter mAdapter;
 	private View mRootView;
@@ -48,12 +48,19 @@ public class ChatFragment extends Fragment implements MQTTActivityCallBack, Chat
 	    String title = getResources().getStringArray(R.array.activity_titles)[3];
 	    getActivity().setTitle(title);
 	     
-	    mController = MQTTClientController.getInstance( mContext );
-	     
 	    setupContent();
+	    registerListener();
 	     
 	    return mRootView;
 	}
+
+	@Override
+	public void onDestroyView() {
+		super.onDestroyView();
+		unregisterListener();
+	}
+
+
 
 	protected void setupContent() {
 		super.onResume();
@@ -67,7 +74,13 @@ public class ChatFragment extends Fragment implements MQTTActivityCallBack, Chat
 				String publishTxt = editText.getText().toString();
 				editText.setText("");
 				// TODO: publish topic
-				mController.publishOnTopic(topic2Publish, publishTxt);
+				// start service
+				Intent intent = new Intent(mContext, MQTTService.class);
+				intent.setAction( MQTTService.ACTION_PUBLISH );
+				intent.putExtra( MQTTService.INTENT_EXTRA_PUBLISH_TOPIC , topic2Publish);
+				intent.putExtra( MQTTService.INTENT_EXTRA_PUBLISH_MESSAGE , publishTxt);
+		        mContext.startService(intent);
+
 				ChatMessageModel msg = new ChatMessageModel( publishTxt );
 				mAdapter.add( msg );
 				mAdapter.notifyDataSetChanged();
@@ -85,11 +98,11 @@ public class ChatFragment extends Fragment implements MQTTActivityCallBack, Chat
 	}
 	
 	public void registerListener() {
-		mController.registerCallback( new MQTTCallBack(mContext, this) );
+		MQTTServiceDelegate.registerActivityCallback( this );
 	}
 	
-	public void unregisterListener( MQTTActivityCallBack callback ) {
-		mController.registerCallback( new MQTTCallBack(mContext, null) );
+	public void unregisterListener() {
+		MQTTServiceDelegate.unregisterActivityCallback( this );
 	}
 
 	@Override
