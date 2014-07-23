@@ -136,36 +136,37 @@ public class DrawerActivity extends Activity implements FindFriendFragment.FindF
 
     private void selectItem(int position) {
     	Log.d("kahlen", "select item: " + position);
-    	if ( position == 3 ) {
-    		// update the main content by replacing fragments
-            Fragment fragment = new FindFriendFragment();
-            Bundle args = new Bundle();
-            args.putInt(MainFragment.ARG_PLANET_NUMBER, position);
-            fragment.setArguments(args);
-
-            FragmentManager fragmentManager = getFragmentManager();
-            fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
-
-            // update selected item and title, then close the drawer
-            mDrawerList.setItemChecked(position, true);
-            setTitle(mPlanetTitles[position]);
-            mDrawerLayout.closeDrawer(mDrawerList);
-            return;
-    	}
     	
-        // update the main content by replacing fragments
-        Fragment fragment = new MainFragment();
-        Bundle args = new Bundle();
-        args.putInt(MainFragment.ARG_PLANET_NUMBER, position);
-        fragment.setArguments(args);
+    	FragmentManager fragmentManager = getFragmentManager();
+    	Bundle args = new Bundle();
+        args.putInt(MainFragment.DRAWER_SELECTED_POSITION, position);
+    	
+    	switch ( position ) {
+    		case 0:
+    		case 1:
+    		case 2:
+    		case 4:
+    			// update the main content by replacing fragments
+    			Fragment mainFragment = new MainFragment();
+    			mainFragment.setArguments(args);
+    	        fragmentManager.beginTransaction().replace(R.id.content_frame, mainFragment ).commit();
 
-        FragmentManager fragmentManager = getFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
-
-        // update selected item and title, then close the drawer
-        mDrawerList.setItemChecked(position, true);
-        setTitle(mPlanetTitles[position]);
-        mDrawerLayout.closeDrawer(mDrawerList);
+    	        // update selected item and title, then close the drawer
+    	        mDrawerList.setItemChecked(position, true);
+    	        setTitle(mPlanetTitles[position]);
+    	        mDrawerLayout.closeDrawer(mDrawerList);
+    	        break;
+    		case 3:
+    			// update the main content by replacing fragments     
+    			FindFriendFragment findFriendFragment = new FindFriendFragment();
+    			findFriendFragment.setArguments(args);
+                fragmentManager.beginTransaction().replace(R.id.content_frame, findFriendFragment).commit();
+                // update selected item and title, then close the drawer
+                mDrawerList.setItemChecked(position, true);
+                setTitle(mPlanetTitles[position]);
+                mDrawerLayout.closeDrawer(mDrawerList);
+    			break;
+    	}
     }
 
 	@Override
@@ -199,7 +200,8 @@ public class DrawerActivity extends Activity implements FindFriendFragment.FindF
         fragment.setArguments(args);
 
         FragmentManager fragmentManager = getFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
+        // add FindFriendFragment to stack, so when back key is pressed on ChatFragment, it will go back to FindFriendFragment
+        fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).addToBackStack("FindFriendFragment").commit();
 	}
 	
 	// --- MQTT ---

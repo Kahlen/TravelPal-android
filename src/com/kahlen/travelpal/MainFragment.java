@@ -8,7 +8,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 public class MainFragment extends Fragment {
-	public static final String ARG_PLANET_NUMBER = "planet_number";
+	
+	final static public String DRAWER_SELECTED_POSITION = "selected";
 
     public MainFragment() {
         // Empty constructor required for fragment subclasses
@@ -18,7 +19,7 @@ public class MainFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.activity_main, container, false);
         // argument <-> bundle
-        int i = getArguments().getInt(ARG_PLANET_NUMBER);
+        int i = getArguments().getInt(DRAWER_SELECTED_POSITION);
         String title = getResources().getStringArray(R.array.activity_titles)[i];
 
         TextView txtView = (TextView) rootView.findViewById(R.id.main_text);
