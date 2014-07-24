@@ -115,13 +115,21 @@ public class MQTTService extends Service implements MqttCallback, MQTTTaskHandle
 	// --- MQTT functions ---
 	public void connectMQTTServer() {
 		// use AsyncTask to avoid ANR
+		if ( mClient == null ) {
+			Log.d("kahlen", "MQTTService error, stop service!");
+			stopSelf();
+		}
 		if ( !mClient.isConnected() ) {
 			MQTTAsyncTask task = new MQTTAsyncTask( mContext, mClient, this );
 			task.execute( new Object[]{MQTTAsyncTask.TaskType.connect, this} );
 		}
 	}
 	
-	public void disconnectMQTTServer() {		
+	public void disconnectMQTTServer() {	
+		if ( mClient == null ) {
+			Log.d("kahlen", "MQTTService error, stop service!");
+			stopSelf();
+		}
 		if ( mClient.isConnected() ) {
 			MQTTAsyncTask task = new MQTTAsyncTask( mContext, mClient, this );
 			task.execute( new Object[]{MQTTAsyncTask.TaskType.disconnect} );
@@ -129,6 +137,10 @@ public class MQTTService extends Service implements MqttCallback, MQTTTaskHandle
 	}
 	
 	public void subscribeTopic( String topic ) {
+		if ( mClient == null ) {
+			Log.d("kahlen", "MQTTService error, stop service!");
+			stopSelf();
+		}
 		MQTTAsyncTask task = new MQTTAsyncTask( mContext, mClient, this );
 		task.execute( new Object[]{MQTTAsyncTask.TaskType.subscribe, topic} );
 	}
@@ -149,6 +161,10 @@ public class MQTTService extends Service implements MqttCallback, MQTTTaskHandle
 	}
 	
 	public boolean isConnected() {
+		if ( mClient == null ) {
+			Log.d("kahlen", "MQTTService error, stop service!");
+			stopSelf();
+		}
 		return mClient.isConnected(); 
 	}
 	
@@ -181,9 +197,9 @@ public class MQTTService extends Service implements MqttCallback, MQTTTaskHandle
 		// if app is not at foreground, create notification
 		if ( !MyApplication.isActivityVisible() ) {
 			Intent resultIntent = new Intent(mContext, DrawerActivity.class);
-			resultIntent.putExtra("new_message", true);
-			resultIntent.putExtra("topic", topic);
-			resultIntent.putExtra("message", new String(message.getPayload(), "UTF-8"));
+			resultIntent.putExtra(DrawerActivity.INTENT_EXTRA_MQTT_NOTIFICATION_TYPE, DrawerActivity.MQTTNotificationType.newMessage.ordinal());
+			resultIntent.putExtra(DrawerActivity.INTENT_EXTRA_TOPIC, topic);
+			resultIntent.putExtra(DrawerActivity.INTENT_EXTRA_MESSAGE, new String(message.getPayload(), "UTF-8"));
 			PendingIntent resultPendingIntent =
 				    PendingIntent.getActivity(
 				    mContext,

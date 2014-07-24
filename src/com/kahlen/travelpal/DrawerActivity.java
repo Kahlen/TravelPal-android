@@ -36,6 +36,10 @@ import android.widget.Toast;
 public class DrawerActivity extends Activity implements FindFriendFragment.FindFriendListener, NewTripListener, MQTTActivityCallBack, MQTTErrorCallBack {
 	
 	public static enum DrawerType { home, mytrip, newtrip, friends, me };
+	public static enum MQTTNotificationType { newMessage, addItinerary, updateItinerary, unknown };
+	final public static String INTENT_EXTRA_MQTT_NOTIFICATION_TYPE = "mqtt_notification_type";
+	final public static String INTENT_EXTRA_TOPIC = "topic";
+	final public static String INTENT_EXTRA_MESSAGE = "message";
 	
 	private Context mContext;
 	
@@ -91,16 +95,20 @@ public class DrawerActivity extends Activity implements FindFriendFragment.FindF
         mDrawerLayout.setDrawerListener(mDrawerToggle);
 
         Intent intent = getIntent();
-		boolean fromNewMessage = intent.getBooleanExtra("new_message", false);
-		if ( fromNewMessage ) {
-			// get new message when in
-			String topic = intent.getStringExtra("topic");
-			String friendId = topic.split("/")[1];
-			friendIdSelected(friendId);
-		} else if (savedInstanceState == null) {
-            selectItem(DrawerType.home);
-        }
-        
+		int mqttNotificationType = intent.getIntExtra(INTENT_EXTRA_MQTT_NOTIFICATION_TYPE, MQTTNotificationType.unknown.ordinal());
+		switch ( MQTTNotificationType.values()[mqttNotificationType] ) {
+			case newMessage:
+				// get new message when in
+				String topic = intent.getStringExtra("topic");
+				String friendId = topic.split("/")[1];
+				friendIdSelected(friendId);
+				break;
+			case addItinerary:
+			case updateItinerary:
+			case unknown:
+				selectItem(DrawerType.home);
+				break;
+		}
 	}
 
 	@Override
