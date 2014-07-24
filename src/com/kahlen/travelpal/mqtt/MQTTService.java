@@ -50,6 +50,12 @@ public class MQTTService extends Service implements MqttCallback, MQTTTaskHandle
 				broadcastErrorMessage( e.getMessage() );
 
 				e.printStackTrace();
+			} catch (Exception e) {
+				// TODO: UserInfo.getUserId() null
+				// other errors
+				e.printStackTrace();
+				Log.d("kahlen", "MQTTService error, stop service!");
+				stopSelf();
 			}
 		}
 	}

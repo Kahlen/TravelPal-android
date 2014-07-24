@@ -109,8 +109,7 @@ public class NewTripFragment extends Fragment {
             throw new ClassCastException(activity.toString() + " must implement OnHeadlineSelectedListener");
         }
 	}
-
-
+	
 	private void setFooter() {
 		Button nextBtn = (Button) mRootView.findViewById( R.id.newtrip_footer_next );
 		nextBtn.setOnClickListener( new OnClickListener() {

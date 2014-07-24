@@ -17,9 +17,11 @@ import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnKeyListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -63,6 +65,21 @@ public class NewTripFriendsFragment extends Fragment implements NewTripFriendsCa
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString() + " must implement OnHeadlineSelectedListener");
         }
+	}
+	
+	private void setBackKeyEvent() {
+		mRootView.setOnKeyListener( new OnKeyListener() {
+
+			@Override
+			public boolean onKey(View arg0, int arg1, KeyEvent arg2) {
+				if( arg1 == KeyEvent.KEYCODE_BACK ) {
+					backKeyPressed();
+					return true;
+				}
+				return false;
+			}
+			
+		});
 	}
 	
 	private void setDestinationData( Bundle data ) {

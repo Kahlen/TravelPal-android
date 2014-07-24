@@ -237,6 +237,8 @@ public class DrawerActivity extends Activity implements FindFriendFragment.FindF
 		fragment.setArguments(args);
 		
 		FragmentManager fragmentManager = getFragmentManager();
+		// pop NewTripFragment, so when clicking back key on NewTripFriendsFragment, it doesn't go back to NewTripFragment
+		fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
         // don't add NewTripFriendsFragment to stack
         fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();	
 	}
