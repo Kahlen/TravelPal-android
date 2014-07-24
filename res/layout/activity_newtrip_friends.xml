@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+    
+    <TextView 
+        android:id="@+id/newtrip_friends_destination"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:textSize="20sp"/>
+    
+    <LinearLayout
+        android:id="@+id/newtrip_friends_start_date"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:orientation="horizontal"
+        android:layout_below="@id/newtrip_friends_destination">
+        
+        <TextView
+            android:id="@+id/newtrip_friends_start_date_from"
+            android:layout_height="wrap_content"
+        	android:layout_width="wrap_content"
+        	android:text="@string/from"
+        	android:textSize="20sp" />
+        
+        <TextView
+            android:id="@+id/newtrip_friends_start_date_from_date"
+            android:layout_height="wrap_content"
+        	android:layout_width="wrap_content"
+        	android:textSize="20sp" />
+
+    </LinearLayout>
+    
+    <LinearLayout
+        android:id="@+id/newtrip_friends_end_date"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:orientation="horizontal"
+        android:layout_below="@id/newtrip_friends_start_date">
+        
+        <TextView
+            android:id="@+id/newtrip_friends_end_date_to"
+            android:layout_height="wrap_content"
+        	android:layout_width="wrap_content"
+        	android:text="@string/to"
+        	android:textSize="20sp" />
+        
+        <TextView
+            android:id="@+id/newtrip_friends_end_date_to_date"
+            android:layout_height="wrap_content"
+        	android:layout_width="wrap_content"
+        	android:textSize="20sp" />
+
+    </LinearLayout>
+
+    
+    <ListView
+		android:id="@+id/newtrip_friends_list"
+	    android:layout_height="wrap_content"
+	    android:layout_width="match_parent"
+	    android:layout_below="@id/newtrip_friends_end_date"/>
+
+    <LinearLayout 
+        android:id="@+id/newtrip_friends_footer"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_alignParentBottom="true"
+        style="?android:attr/buttonBarStyle">
+        
+        <Button android:id="@+id/newtrip_friends_footer_left"
+		   android:layout_height="wrap_content" 
+		   android:layout_width="0dp"  
+		   android:layout_weight="1"   
+		   android:text="@string/back"
+		   android:background="?android:attr/selectableItemBackground"
+		   style="?android:attr/buttonBarButtonStyle" />
+        
+        <Button android:id="@+id/newtrip_friends_footer_right"
+		   android:layout_height="wrap_content" 
+		   android:layout_width="0dp"  
+		   android:layout_weight="1" 
+		   android:text="@string/ok"
+		   android:background="?android:attr/selectableItemBackground"
+		   style="?android:attr/buttonBarButtonStyle"/>
+        
+    </LinearLayout>
+    
+    
+
+</RelativeLayout>

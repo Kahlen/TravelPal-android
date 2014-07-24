@@ -3,6 +3,7 @@ package com.kahlen.travelpal.chat;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import com.kahlen.travelpal.MainFragment;
 import com.kahlen.travelpal.R;
 import com.kahlen.travelpal.user.UserInfo;
 
@@ -25,7 +26,7 @@ public class FindFriendFragment extends Fragment implements FindFriendsCallback 
 	private ListView mListView;
 	private FindFriendsCallback mCallback = this;
 	private View mRootView;
-	private FindFriendListener acitivityCallback;
+	private FindFriendListener activityCallback;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -33,8 +34,8 @@ public class FindFriendFragment extends Fragment implements FindFriendsCallback 
 		mContext = getActivity();
 		mRootView = inflater.inflate(R.layout.activity_friends, container, false);
 	     // argument <-> bundle
-//	     int i = getArguments().getInt(ARG_PLANET_NUMBER);
-	     String title = getResources().getStringArray(R.array.activity_titles)[3];
+	     int i = getArguments().getInt(MainFragment.DRAWER_SELECTED_POSITION);
+	     String title = getResources().getStringArray(R.array.activity_titles)[i];
 	     getActivity().setTitle(title);
 	     
 	     // get friends from server
@@ -52,11 +53,10 @@ public class FindFriendFragment extends Fragment implements FindFriendsCallback 
 
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
-				// TODO Auto-generated method stub
 				FriendModel f = (FriendModel) arg0.getItemAtPosition(arg2);
 				Log.d("kahlen", f.id + " is clicked");
 				// notify activity to change fragment
-				acitivityCallback.friendIdSelected( f.id );
+				activityCallback.friendIdSelected( f.id );
 			}
 			
 		});
@@ -76,6 +76,8 @@ public class FindFriendFragment extends Fragment implements FindFriendsCallback 
 			for ( int i = 0; i < friends.length(); i++ ) {
 				JSONObject fo = friends.getJSONObject(i);
 				FriendModel f = new FriendModel( fo.getString("_id"), fo.getBoolean("isFriend") );
+				if ( fo.has("name") )
+					f.name = fo.getString("name");
 				mAdapter.add(f);
 				mAdapter.notifyDataSetChanged();
 			}
@@ -96,7 +98,7 @@ public class FindFriendFragment extends Fragment implements FindFriendsCallback 
 		super.onAttach(activity);
 		
 		try {
-			acitivityCallback = (FindFriendListener) activity;
+			activityCallback = (FindFriendListener) activity;
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString() + " must implement OnHeadlineSelectedListener");
         }

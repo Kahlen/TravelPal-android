@@ -7,6 +7,9 @@ import com.kahlen.travelpal.mqtt.MQTTConfiguration;
 import com.kahlen.travelpal.mqtt.MQTTErrorCallBack;
 import com.kahlen.travelpal.mqtt.MQTTService;
 import com.kahlen.travelpal.mqtt.MQTTServiceDelegate;
+import com.kahlen.travelpal.newtrip.NewTripFriendsFragment;
+import com.kahlen.travelpal.newtrip.NewTripFragment;
+import com.kahlen.travelpal.newtrip.NewTripListener;
 import com.kahlen.travelpal.user.UserInfo;
 
 import android.os.Bundle;
@@ -30,7 +33,9 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
-public class DrawerActivity extends Activity implements FindFriendFragment.FindFriendListener, MQTTActivityCallBack, MQTTErrorCallBack {
+public class DrawerActivity extends Activity implements FindFriendFragment.FindFriendListener, NewTripListener, MQTTActivityCallBack, MQTTErrorCallBack {
+	
+	public static enum DrawerType { home, mytrip, newtrip, friends, me };
 	
 	private Context mContext;
 	
@@ -93,7 +98,7 @@ public class DrawerActivity extends Activity implements FindFriendFragment.FindF
 			String friendId = topic.split("/")[1];
 			friendIdSelected(friendId);
 		} else if (savedInstanceState == null) {
-            selectItem(0);
+            selectItem(DrawerType.home);
         }
         
 	}
@@ -130,40 +135,49 @@ public class DrawerActivity extends Activity implements FindFriendFragment.FindF
     private class DrawerItemClickListener implements ListView.OnItemClickListener {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            selectItem(position);
+            selectItem(DrawerType.values()[position]);
         }
     }
 
-    private void selectItem(int position) {
+    private void selectItem(DrawerType position) {
     	Log.d("kahlen", "select item: " + position);
     	
     	FragmentManager fragmentManager = getFragmentManager();
     	Bundle args = new Bundle();
-        args.putInt(MainFragment.DRAWER_SELECTED_POSITION, position);
-    	
+        args.putInt(MainFragment.DRAWER_SELECTED_POSITION, position.ordinal());
+        
+    	int positionInt = position.ordinal();
     	switch ( position ) {
-    		case 0:
-    		case 1:
-    		case 2:
-    		case 4:
+    		case home:
+    		case mytrip:
+    		case me:
     			// update the main content by replacing fragments
     			Fragment mainFragment = new MainFragment();
     			mainFragment.setArguments(args);
     	        fragmentManager.beginTransaction().replace(R.id.content_frame, mainFragment ).commit();
 
     	        // update selected item and title, then close the drawer
-    	        mDrawerList.setItemChecked(position, true);
-    	        setTitle(mPlanetTitles[position]);
+    	        mDrawerList.setItemChecked(positionInt, true);
+    	        setTitle(mPlanetTitles[positionInt]);
     	        mDrawerLayout.closeDrawer(mDrawerList);
     	        break;
-    		case 3:
+    		case newtrip:
+    			Fragment newtrip = new NewTripFragment();
+    			newtrip.setArguments(args);
+    			fragmentManager.beginTransaction().replace(R.id.content_frame, newtrip).commit();
+    			// update selected item and title, then close the drawer
+                mDrawerList.setItemChecked(positionInt, true);
+                setTitle(mPlanetTitles[positionInt]);
+                mDrawerLayout.closeDrawer(mDrawerList);
+    			break;
+    		case friends:
     			// update the main content by replacing fragments     
     			FindFriendFragment findFriendFragment = new FindFriendFragment();
     			findFriendFragment.setArguments(args);
                 fragmentManager.beginTransaction().replace(R.id.content_frame, findFriendFragment).commit();
                 // update selected item and title, then close the drawer
-                mDrawerList.setItemChecked(position, true);
-                setTitle(mPlanetTitles[position]);
+                mDrawerList.setItemChecked(positionInt, true);
+                setTitle(mPlanetTitles[positionInt]);
                 mDrawerLayout.closeDrawer(mDrawerList);
     			break;
     	}
@@ -202,6 +216,37 @@ public class DrawerActivity extends Activity implements FindFriendFragment.FindF
         FragmentManager fragmentManager = getFragmentManager();
         // add FindFriendFragment to stack, so when back key is pressed on ChatFragment, it will go back to FindFriendFragment
         fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).addToBackStack("FindFriendFragment").commit();
+	}
+	
+	// --- callback from NewTripFragment/NewTripFriendsFragment ---
+	@Override
+	public void destinationDateDone(Bundle args) {
+		Fragment fragment = new NewTripFriendsFragment();
+		args.putInt(MainFragment.DRAWER_SELECTED_POSITION, DrawerType.newtrip.ordinal());
+		fragment.setArguments(args);
+		
+		FragmentManager fragmentManager = getFragmentManager();
+        // add NewTripFragment to stack, so when back key is pressed on NewTripFriendsFragment, it will go back to NewTripFragment
+        fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).addToBackStack("NewTripFragment").commit();
+	}
+	
+	@Override
+	public void backToNewTrip( Bundle args ) {
+		Fragment fragment = new NewTripFragment();
+		args.putInt(MainFragment.DRAWER_SELECTED_POSITION, DrawerType.newtrip.ordinal());
+		fragment.setArguments(args);
+		
+		FragmentManager fragmentManager = getFragmentManager();
+        // don't add NewTripFriendsFragment to stack
+        fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();	
+	}
+
+	@Override
+	public void finishNewTrip( Bundle args ) {
+		// pop NewTripFragment, so when clicking back key on main page, it doesn't go back to NewTripFragment
+		getFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+		// go back to home page
+		selectItem(DrawerType.home);
 	}
 	
 	// --- MQTT ---
@@ -295,5 +340,6 @@ public class DrawerActivity extends Activity implements FindFriendFragment.FindF
 		}
 		return super.onMenuItemSelected(featureId, item);
 	}
+
 
 }

@@ -34,4 +34,13 @@
     <!-- Log in page -->
     <string name="login">Log in</string>
     
+    <!-- New trip -->
+    <string name="next">Next</string>
+    <string name="back">Back</string>
+    <string name="destination">Destination:</string>
+    <string name="start_date">Start date: </string>
+    <string name="end_date">End date: </string>
+    <string name="from">From: </string>
+    <string name="to">To: </string>
+    
 </resources>

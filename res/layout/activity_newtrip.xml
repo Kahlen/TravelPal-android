@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+    
+    <LinearLayout
+        android:id="@+id/newtrip_destination"
+        android:layout_height="wrap_content"
+	    android:layout_width="wrap_content"
+	    android:orientation="horizontal">
+        
+        <TextView 
+	        android:id="@+id/newtrip_destination_title"
+	        android:layout_height="wrap_content"
+	        android:layout_width="wrap_content"
+	        android:text="@string/destination"
+	        android:textSize="20sp"/>
+	    
+	    <EditText 
+	        android:id="@+id/newtrip_destination_input"
+	        android:layout_height="wrap_content"
+	        android:layout_width="250dp"
+	        android:inputType="text"/>
+        
+    </LinearLayout>
+    
+    <LinearLayout
+        android:id="@+id/newtrip_start_date"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:orientation="horizontal"
+        android:layout_below="@id/newtrip_destination">
+	    
+        <TextView
+            android:id="@+id/newtrip_start_date_txt"
+            android:layout_width="wrap_content" 
+		    android:layout_height="wrap_content"
+		    android:text="@string/start_date"
+		    android:textSize="20sp"/>  
+	            
+        <Button 
+            android:id="@+id/newtrip_start_date_btn"
+		    android:layout_width="wrap_content" 
+		    android:layout_height="wrap_content" />
+
+    </LinearLayout>
+    
+    <LinearLayout
+        android:id="@+id/newtrip_end_date"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:orientation="horizontal"
+        android:layout_below="@id/newtrip_start_date">
+	    
+        <TextView
+            android:id="@+id/newtrip_end_date_txt"
+            android:layout_width="wrap_content" 
+		    android:layout_height="wrap_content"
+		    android:text="@string/end_date"
+		    android:textSize="20sp"/>  
+	            
+        <Button 
+            android:id="@+id/newtrip_end_date_btn"
+		    android:layout_width="wrap_content" 
+		    android:layout_height="wrap_content" />
+
+    </LinearLayout>
+    
+    
+    
+   <LinearLayout 
+        android:id="@+id/newtrip_footer"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_alignParentBottom="true"
+        style="?android:attr/buttonBarStyle">
+        
+        <Button android:id="@+id/newtrip_footer_next"
+		   android:layout_height="wrap_content" 
+		   android:layout_width="0dp"  
+		   android:layout_weight="1"   
+		   android:text="@string/next"
+		   android:background="?android:attr/selectableItemBackground"
+		   style="?android:attr/buttonBarButtonStyle" />
+        
+    </LinearLayout>
+    
+    
+
+</RelativeLayout>

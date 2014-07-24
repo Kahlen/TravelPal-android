@@ -9,4 +9,6 @@ public class MQTTConfiguration {
 	public static String LOGIN_URI = SERVER_URL + "/login";
 	public static String FIND_FRIENDS_URI = SERVER_URL + "/searchf";
 	public static String GET_CHAT_HISTORY = SERVER_URL + "/history";
+	public static String FIND_FRIENDS_WITH_RELATION_URI = SERVER_URL + "/searchff";
+	public static String ADD_ITINERARY_URI = SERVER_URL + "/additinerary";
 }
