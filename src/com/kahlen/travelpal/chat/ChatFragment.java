@@ -3,6 +3,7 @@ package com.kahlen.travelpal.chat;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import com.kahlen.travelpal.DrawerActivity;
 import com.kahlen.travelpal.R;
 import com.kahlen.travelpal.mqtt.MQTTActivityCallBack;
 import com.kahlen.travelpal.mqtt.MQTTService;
@@ -106,7 +107,11 @@ public class ChatFragment extends Fragment implements MQTTActivityCallBack, Chat
 	}
 
 	@Override
-	public void messageReceived( String topic, String message ) {
+	public void messageReceived( DrawerActivity.MQTTNotificationType notificationType, String topic, String message ) {
+		// the message is not chat
+		if ( notificationType != DrawerActivity.MQTTNotificationType.newMessage )
+			return;
+		
 		final ChatMessageModel msg = new ChatMessageModel();
 		msg.message = message;
 		Log.d("kahlen", "receive topic: " + topic);

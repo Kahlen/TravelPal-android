@@ -69,7 +69,7 @@ public class DrawerActivity extends Activity implements FindFriendFragment.FindF
         // Set the list's click listener
         mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
 		
-     // enable ActionBar app icon to behave as action to toggle nav drawer
+        // enable ActionBar app icon to behave as action to toggle nav drawer
         getActionBar().setDisplayHomeAsUpEnabled(true);
         getActionBar().setHomeButtonEnabled(true);
 
@@ -96,6 +96,7 @@ public class DrawerActivity extends Activity implements FindFriendFragment.FindF
 
         Intent intent = getIntent();
 		int mqttNotificationType = intent.getIntExtra(INTENT_EXTRA_MQTT_NOTIFICATION_TYPE, MQTTNotificationType.unknown.ordinal());
+		Log.d("kahlen", "from notification type: " + MQTTNotificationType.values()[mqttNotificationType] );
 		switch ( MQTTNotificationType.values()[mqttNotificationType] ) {
 			case newMessage:
 				// get new message when in
@@ -272,7 +273,7 @@ public class DrawerActivity extends Activity implements FindFriendFragment.FindF
 	}
 	
 	@Override
-	public void messageReceived(String topic, String message) {
+	public void messageReceived( MQTTNotificationType notificationType, String topic, String message) {
 		Log.d("kahlen", "--- messageReceived in DrawerActivity ---");
 		// TODO: what to do in DrawerActivity?
 //		ChatFragment chatFrg = (ChatFragment) getFragmentManager().findFragmentById(R.id.content_frame);

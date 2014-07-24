@@ -2,6 +2,8 @@ package com.kahlen.travelpal.mqtt;
 
 import java.util.ArrayList;
 
+import com.kahlen.travelpal.DrawerActivity;
+
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -11,6 +13,7 @@ public class MQTTServiceDelegate {
 	
 	public final static String ACTION_MESSAGE_ARRIVED = "com.kahlen.travelpal.MESSAGE_ARRIVED";
 	public final static String ACTION_CONNECTION_ERROR = "com.kahlen.travelpal.CONNECTION_ERROR";
+	public final static String INTENT_EXTRA_RECEIVED_NOTIFICATIO_TYPE = "com.kahlen.travelpal.RECEIVED_NOTIFICATION_TYPE";
 	public final static String INTENT_EXTRA_RECEIVED_TOPIC = "com.kahlen.travelpal.RECEIVED_TOPIC";
 	public final static String INTENT_EXTRA_RECEIVED_MESSAGE = "com.kahlen.travelpal.RECEIVED_MESSAGE";
 	public final static String INTENT_EXTRA_ERROR_MESSAGE = "com.kahlen.travelpal.ERROR_MESSAGE";
@@ -42,12 +45,13 @@ public class MQTTServiceDelegate {
 
 		@Override
 		public void onReceive(Context context, Intent intent) {			
+			DrawerActivity.MQTTNotificationType notificationType = DrawerActivity.MQTTNotificationType.values()[intent.getIntExtra(INTENT_EXTRA_RECEIVED_NOTIFICATIO_TYPE, DrawerActivity.MQTTNotificationType.unknown.ordinal())];
 			String topic = intent.getStringExtra( INTENT_EXTRA_RECEIVED_TOPIC );
 			String message = intent.getStringExtra( INTENT_EXTRA_RECEIVED_MESSAGE );
 			Log.d("kahlen", "MessageReceiver onReceive: ( " + topic + ", " + message + " )");
 			
 			for ( MQTTActivityCallBack callback: mActivityCallbacks ) {
-				callback.messageReceived(topic, message);
+				callback.messageReceived(notificationType, topic, message);
 			}
 			
 		}

@@ -194,12 +194,35 @@ public class MQTTService extends Service implements MqttCallback, MQTTTaskHandle
 		String msg = new String(message.getPayload(), "UTF-8");
 		Log.d("kahlen", "receive new message on topic (" + topic + "): " + msg);
 		
+		DrawerActivity.MQTTNotificationType notificationType = getTopicType(topic);
+		String notificationContent = "New message received!";
+		
 		// if app is not at foreground, create notification
 		if ( !MyApplication.isActivityVisible() ) {
 			Intent resultIntent = new Intent(mContext, DrawerActivity.class);
-			resultIntent.putExtra(DrawerActivity.INTENT_EXTRA_MQTT_NOTIFICATION_TYPE, DrawerActivity.MQTTNotificationType.newMessage.ordinal());
-			resultIntent.putExtra(DrawerActivity.INTENT_EXTRA_TOPIC, topic);
-			resultIntent.putExtra(DrawerActivity.INTENT_EXTRA_MESSAGE, new String(message.getPayload(), "UTF-8"));
+			switch( notificationType ) {
+				case newMessage:
+					resultIntent.putExtra(DrawerActivity.INTENT_EXTRA_MQTT_NOTIFICATION_TYPE, DrawerActivity.MQTTNotificationType.newMessage.ordinal());
+					resultIntent.putExtra(DrawerActivity.INTENT_EXTRA_TOPIC, topic);
+					resultIntent.putExtra(DrawerActivity.INTENT_EXTRA_MESSAGE, new String(message.getPayload(), "UTF-8"));
+					notificationContent = "New message received!";
+					break;
+				case addItinerary:
+					resultIntent.putExtra(DrawerActivity.INTENT_EXTRA_MQTT_NOTIFICATION_TYPE, DrawerActivity.MQTTNotificationType.addItinerary.ordinal());
+					resultIntent.putExtra(DrawerActivity.INTENT_EXTRA_TOPIC, topic);
+					resultIntent.putExtra(DrawerActivity.INTENT_EXTRA_MESSAGE, new String(message.getPayload(), "UTF-8"));
+					notificationContent = "New itinerary created!";
+					break;
+				case updateItinerary:
+					resultIntent.putExtra(DrawerActivity.INTENT_EXTRA_MQTT_NOTIFICATION_TYPE, DrawerActivity.MQTTNotificationType.updateItinerary.ordinal());
+					resultIntent.putExtra(DrawerActivity.INTENT_EXTRA_TOPIC, topic);
+					resultIntent.putExtra(DrawerActivity.INTENT_EXTRA_MESSAGE, new String(message.getPayload(), "UTF-8"));
+					notificationContent = "Itinerary updated!";
+					break;
+				case unknown:
+					break;
+			}
+			
 			PendingIntent resultPendingIntent =
 				    PendingIntent.getActivity(
 				    mContext,
@@ -214,7 +237,7 @@ public class MQTTService extends Service implements MqttCallback, MQTTTaskHandle
 				    .setSmallIcon(R.drawable.ic_launcher)
 				    .setAutoCancel(true)
 				    .setContentTitle("TravelPal")
-				    .setContentText("new message received!")
+				    .setContentText(notificationContent)
 				    .setContentIntent(resultPendingIntent);
 			mNotifyMgr.notify(789, mBuilder.build());
 		}
@@ -222,10 +245,23 @@ public class MQTTService extends Service implements MqttCallback, MQTTTaskHandle
 		// broadcast message
 		Intent broadcastIntent = new Intent();
         broadcastIntent.setAction( MQTTServiceDelegate.ACTION_MESSAGE_ARRIVED );
+        broadcastIntent.putExtra(MQTTServiceDelegate.INTENT_EXTRA_RECEIVED_NOTIFICATIO_TYPE, notificationType.ordinal());
         broadcastIntent.putExtra(MQTTServiceDelegate.INTENT_EXTRA_RECEIVED_TOPIC, topic);
         broadcastIntent.putExtra(MQTTServiceDelegate.INTENT_EXTRA_RECEIVED_MESSAGE , msg);
         sendBroadcast(broadcastIntent); 
 			
+	}
+	
+	private DrawerActivity.MQTTNotificationType getTopicType( String topic ) {
+		String type = topic.substring(topic.lastIndexOf("/")+1);
+		if ( DrawerActivity.MQTTNotificationType.newMessage.name().equals(type) )
+			return DrawerActivity.MQTTNotificationType.newMessage;
+		else if ( DrawerActivity.MQTTNotificationType.addItinerary.name().equals(type) )
+			return DrawerActivity.MQTTNotificationType.addItinerary;
+		else if ( DrawerActivity.MQTTNotificationType.updateItinerary.name().equals(type) )
+			return DrawerActivity.MQTTNotificationType.updateItinerary;
+		else
+			return DrawerActivity.MQTTNotificationType.unknown;
 	}
 
 }
