@@ -11,6 +11,8 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.AUTHENTICATE_ACCOUNTS"/>
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
 
     <application
         android:name="com.kahlen.travelpal.MyApplication"
@@ -18,25 +20,27 @@
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
+        
         <activity
-            android:name="com.kahlen.travelpal.MainActivity"
+            android:name=".MainActivity"
             android:label="@string/app_name"
             android:theme="@android:style/Theme.NoTitleBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         
         <activity
+            android:name=".account.AccountMainActivity"
+            android:theme="@android:style/Theme.NoTitleBar" />
+        
+        <activity
             android:name=".account.LoginAccountActivity"
-            android:label="@string/app_name"
             android:theme="@android:style/Theme.NoTitleBar" />
         
         <activity
             android:name=".account.CreateAccountActivity"
-            android:label="@string/app_name"
             android:theme="@android:style/Theme.NoTitleBar" />
         
         <activity 
@@ -47,6 +51,15 @@
             android:windowSoftInputMode="stateHidden" />
                     
         <service android:name=".mqtt.MQTTService"/>
+        
+        <service android:name=".account.UserAccountService">
+	        <intent-filter>
+	            <action android:name="android.accounts.AccountAuthenticator"/>
+	        </intent-filter>
+	        <meta-data
+	            android:name="android.accounts.AccountAuthenticator"
+	            android:resource="@xml/authenticator" />
+	    </service>
         
         <receiver android:name=".mqtt.MQTTServiceDelegate$MessageReceiver" >
             <intent-filter>

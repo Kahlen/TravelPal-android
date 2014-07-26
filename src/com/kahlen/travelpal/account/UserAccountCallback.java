@@ -1,5 +1,7 @@
 package com.kahlen.travelpal.account;
 
+import org.json.JSONObject;
+
 public interface UserAccountCallback {
-	void loginResult(int r);
+	void loginResult(JSONObject r);
 }

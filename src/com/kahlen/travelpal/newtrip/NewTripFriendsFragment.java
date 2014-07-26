@@ -8,8 +8,8 @@ import org.json.JSONObject;
 
 import com.kahlen.travelpal.MainFragment;
 import com.kahlen.travelpal.R;
-import com.kahlen.travelpal.account.UserInfo;
 import com.kahlen.travelpal.chat.FriendModel;
+import com.kahlen.travelpal.utilities.AccountUtils;
 
 import android.app.Activity;
 import android.app.Fragment;
@@ -34,10 +34,12 @@ public class NewTripFriendsFragment extends Fragment implements NewTripFriendsCa
 	private ListView mListView;
 	private NewTripFriendsAdapter mAdapter;
 	private NewTripListener activityCallback;
+	private String userid;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		mContext = getActivity();
+		userid = AccountUtils.getUserid(mContext);
 		mRootView = inflater.inflate(R.layout.activity_newtrip_friends, container, false);
 		// argument <-> bundle
 		Bundle data = getArguments();
@@ -119,14 +121,14 @@ public class NewTripFriendsFragment extends Fragment implements NewTripFriendsCa
 	
 	private void getFriendsFromServer() {
 		NewTripFriendsTask task = new NewTripFriendsTask( this );
-		task.execute( UserInfo.getUserId() );
+		task.execute( userid );
 	}
 	
 	private void addItinerary() {
 		Bundle data = getArguments();
 		JSONObject requestBody = new JSONObject();
 		try {
-			requestBody.put( "user" , UserInfo.getUserId());
+			requestBody.put( "user" , userid);
 			requestBody.put("destination", data.getString(NewTripFragment.NEW_TRIP_DESTINATION));
 			requestBody.put("start", data.getString(NewTripFragment.NEW_TRIP_START_DATE));
 			requestBody.put("end", data.getString(NewTripFragment.NEW_TRIP_END_DATE));

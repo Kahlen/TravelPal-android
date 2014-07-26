@@ -5,10 +5,10 @@ import org.json.JSONObject;
 
 import com.kahlen.travelpal.DrawerActivity;
 import com.kahlen.travelpal.R;
-import com.kahlen.travelpal.account.UserInfo;
 import com.kahlen.travelpal.mqtt.MQTTActivityCallBack;
 import com.kahlen.travelpal.mqtt.MQTTService;
 import com.kahlen.travelpal.mqtt.MQTTServiceDelegate;
+import com.kahlen.travelpal.utilities.AccountUtils;
 
 import android.os.Bundle;
 import android.app.Fragment;
@@ -32,20 +32,23 @@ public class ChatFragment extends Fragment implements MQTTActivityCallBack, Chat
 	final public static String ARG_CHAT_FRIEND_ID = "chat_friend_id";
 	private String chatFriendId;
 	private String topic2Publish;
+	String userid;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		Log.d("kahlen", "create ChatFragment");
 		mContext = getActivity().getApplicationContext();
+		userid = AccountUtils.getUserid(mContext);
+		
 		mRootView = inflater.inflate(R.layout.activity_chat, container, false);
 	     // argument <-> bundle
 		chatFriendId = getArguments().getString(ARG_CHAT_FRIEND_ID);
 		
 		ChatHistoryTask task = new ChatHistoryTask( this );
-		task.execute( UserInfo.getUserId(), chatFriendId );
+		task.execute( userid, chatFriendId );
 		
-		topic2Publish = chatFriendId + "/" + UserInfo.getUserId();
+		topic2Publish = chatFriendId + "/" + userid + "/" + DrawerActivity.MQTTNotificationType.newChat.name();
 	    String title = getResources().getStringArray(R.array.activity_titles)[3];
 	    getActivity().setTitle(title);
 	     
@@ -82,7 +85,7 @@ public class ChatFragment extends Fragment implements MQTTActivityCallBack, Chat
 				intent.putExtra( MQTTService.INTENT_EXTRA_PUBLISH_MESSAGE , publishTxt);
 		        mContext.startService(intent);
 
-				ChatMessageModel msg = new ChatMessageModel( publishTxt );
+				ChatMessageModel msg = new ChatMessageModel( publishTxt, true, userid );
 				mAdapter.add( msg );
 				mAdapter.notifyDataSetChanged();
 			}
@@ -109,20 +112,19 @@ public class ChatFragment extends Fragment implements MQTTActivityCallBack, Chat
 	@Override
 	public void messageReceived( DrawerActivity.MQTTNotificationType notificationType, String topic, String message ) {
 		// the message is not chat
-		if ( notificationType != DrawerActivity.MQTTNotificationType.newMessage )
+		if ( notificationType != DrawerActivity.MQTTNotificationType.newChat )
 			return;
 		
 		final ChatMessageModel msg = new ChatMessageModel();
 		msg.message = message;
 		Log.d("kahlen", "receive topic: " + topic);
 		
-		// TODO: define topic and sender id
-		if ( topic.startsWith( UserInfo.getUserId() ) ) {
+		if ( topic.startsWith( userid ) ) {
 			msg.me = false;
 			msg.senderId = topic.split("/")[1];
 		} else {
 			msg.me = true;
-			msg.senderId = UserInfo.getUserId();
+			msg.senderId = userid;
 		}
 		
 		Log.d("kahlen", "new message --- " + message);
@@ -146,7 +148,7 @@ public class ChatFragment extends Fragment implements MQTTActivityCallBack, Chat
 			for ( int i = 0; i < historyMsg.length(); i++ ) {
 				JSONObject msg = historyMsg.getJSONObject(i);
 				String from =  msg.getString("from");
-				if ( UserInfo.getUserId().equals( from )) {
+				if ( userid.equals( from )) {
 					// from me
 					addMyMessage( msg.getString("message") );
 				} else {
@@ -173,7 +175,7 @@ public class ChatFragment extends Fragment implements MQTTActivityCallBack, Chat
 	}
 	
 	private void addMyMessage( String message ) {
-		final ChatMessageModel oldMsg = new ChatMessageModel( message, true, UserInfo.getUserId() );
+		final ChatMessageModel oldMsg = new ChatMessageModel( message, true, userid );
 		getActivity().runOnUiThread(new Runnable() {
 		     @Override
 		     public void run() {

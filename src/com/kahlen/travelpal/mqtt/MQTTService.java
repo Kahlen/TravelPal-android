@@ -10,7 +10,7 @@ import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 import com.kahlen.travelpal.DrawerActivity;
 import com.kahlen.travelpal.MyApplication;
 import com.kahlen.travelpal.R;
-import com.kahlen.travelpal.account.UserInfo;
+import com.kahlen.travelpal.utilities.AccountUtils;
 
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -44,7 +44,7 @@ public class MQTTService extends Service implements MqttCallback, MQTTTaskHandle
 		super.onCreate();
 		if ( mClient == null ) {
 			try {
-				mClient = new MqttClient(MQTTConfiguration.BROKER_URL, UserInfo.getUserId(), new MemoryPersistence());
+				mClient = new MqttClient(MQTTConfiguration.BROKER_URL, AccountUtils.getUserid(mContext), new MemoryPersistence());
 			} catch (MqttException e) {
 				// broadcast message
 				broadcastErrorMessage( e.getMessage() );
@@ -118,6 +118,7 @@ public class MQTTService extends Service implements MqttCallback, MQTTTaskHandle
 		if ( mClient == null ) {
 			Log.d("kahlen", "MQTTService error, stop service!");
 			stopSelf();
+			return;
 		}
 		if ( !mClient.isConnected() ) {
 			MQTTAsyncTask task = new MQTTAsyncTask( mContext, mClient, this );
@@ -129,6 +130,7 @@ public class MQTTService extends Service implements MqttCallback, MQTTTaskHandle
 		if ( mClient == null ) {
 			Log.d("kahlen", "MQTTService error, stop service!");
 			stopSelf();
+			return;
 		}
 		if ( mClient.isConnected() ) {
 			MQTTAsyncTask task = new MQTTAsyncTask( mContext, mClient, this );
@@ -140,6 +142,7 @@ public class MQTTService extends Service implements MqttCallback, MQTTTaskHandle
 		if ( mClient == null ) {
 			Log.d("kahlen", "MQTTService error, stop service!");
 			stopSelf();
+			return;
 		}
 		MQTTAsyncTask task = new MQTTAsyncTask( mContext, mClient, this );
 		task.execute( new Object[]{MQTTAsyncTask.TaskType.subscribe, topic} );
@@ -201,8 +204,8 @@ public class MQTTService extends Service implements MqttCallback, MQTTTaskHandle
 		if ( !MyApplication.isActivityVisible() ) {
 			Intent resultIntent = new Intent(mContext, DrawerActivity.class);
 			switch( notificationType ) {
-				case newMessage:
-					resultIntent.putExtra(DrawerActivity.INTENT_EXTRA_MQTT_NOTIFICATION_TYPE, DrawerActivity.MQTTNotificationType.newMessage.ordinal());
+				case newChat:
+					resultIntent.putExtra(DrawerActivity.INTENT_EXTRA_MQTT_NOTIFICATION_TYPE, DrawerActivity.MQTTNotificationType.newChat.ordinal());
 					resultIntent.putExtra(DrawerActivity.INTENT_EXTRA_TOPIC, topic);
 					resultIntent.putExtra(DrawerActivity.INTENT_EXTRA_MESSAGE, new String(message.getPayload(), "UTF-8"));
 					notificationContent = "New message received!";
@@ -254,8 +257,8 @@ public class MQTTService extends Service implements MqttCallback, MQTTTaskHandle
 	
 	private DrawerActivity.MQTTNotificationType getTopicType( String topic ) {
 		String type = topic.substring(topic.lastIndexOf("/")+1);
-		if ( DrawerActivity.MQTTNotificationType.newMessage.name().equals(type) )
-			return DrawerActivity.MQTTNotificationType.newMessage;
+		if ( DrawerActivity.MQTTNotificationType.newChat.name().equals(type) )
+			return DrawerActivity.MQTTNotificationType.newChat;
 		else if ( DrawerActivity.MQTTNotificationType.addItinerary.name().equals(type) )
 			return DrawerActivity.MQTTNotificationType.addItinerary;
 		else if ( DrawerActivity.MQTTNotificationType.updateItinerary.name().equals(type) )

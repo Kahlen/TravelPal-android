@@ -1,6 +1,5 @@
 package com.kahlen.travelpal;
 
-import com.kahlen.travelpal.account.UserInfo;
 import com.kahlen.travelpal.chat.ChatFragment;
 import com.kahlen.travelpal.chat.FindFriendFragment;
 import com.kahlen.travelpal.mqtt.MQTTActivityCallBack;
@@ -11,8 +10,10 @@ import com.kahlen.travelpal.mqtt.MQTTServiceDelegate;
 import com.kahlen.travelpal.newtrip.NewTripFriendsFragment;
 import com.kahlen.travelpal.newtrip.NewTripFragment;
 import com.kahlen.travelpal.newtrip.NewTripListener;
+import com.kahlen.travelpal.utilities.AccountUtils;
 
 import android.os.Bundle;
+import android.accounts.AccountManager;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Fragment;
@@ -36,7 +37,7 @@ import android.widget.Toast;
 public class DrawerActivity extends Activity implements FindFriendFragment.FindFriendListener, NewTripListener, MQTTActivityCallBack, MQTTErrorCallBack {
 	
 	public static enum DrawerType { home, mytrip, newtrip, friends, me };
-	public static enum MQTTNotificationType { newMessage, addItinerary, updateItinerary, unknown };
+	public static enum MQTTNotificationType { newChat, addItinerary, updateItinerary, unknown };
 	final public static String INTENT_EXTRA_MQTT_NOTIFICATION_TYPE = "mqtt_notification_type";
 	final public static String INTENT_EXTRA_TOPIC = "topic";
 	final public static String INTENT_EXTRA_MESSAGE = "message";
@@ -98,7 +99,7 @@ public class DrawerActivity extends Activity implements FindFriendFragment.FindF
 		int mqttNotificationType = intent.getIntExtra(INTENT_EXTRA_MQTT_NOTIFICATION_TYPE, MQTTNotificationType.unknown.ordinal());
 		Log.d("kahlen", "from notification type: " + MQTTNotificationType.values()[mqttNotificationType] );
 		switch ( MQTTNotificationType.values()[mqttNotificationType] ) {
-			case newMessage:
+			case newChat:
 				// get new message when in
 				String topic = intent.getStringExtra("topic");
 				String friendId = topic.split("/")[1];
@@ -268,7 +269,7 @@ public class DrawerActivity extends Activity implements FindFriendFragment.FindF
 		intent.setAction( MQTTService.ACTION_CONNECT_N_SUBSCRIBE );
 		// subscribe to everything sent to this user
 		// topic = me/#
-		intent.putExtra( MQTTService.INTENT_EXTRA_SUBSCRIBE_TOPIC, UserInfo.getUserId() + "/#" );
+		intent.putExtra( MQTTService.INTENT_EXTRA_SUBSCRIBE_TOPIC, AccountUtils.getUserid(mContext) + "/#" );
         mContext.startService(intent);
 	}
 	

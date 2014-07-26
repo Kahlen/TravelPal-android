@@ -5,6 +5,8 @@ import org.apache.http.HttpStatus;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.util.EntityUtils;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.kahlen.travelpal.mqtt.MQTTConfiguration;
@@ -12,7 +14,7 @@ import com.kahlen.travelpal.mqtt.MQTTConfiguration;
 import android.os.AsyncTask;
 import android.util.Log;
 
-public class UserAccountTask extends AsyncTask<JSONObject, Void, Integer> {
+public class UserAccountTask extends AsyncTask<JSONObject, Void, JSONObject> {
 	
 	public static enum TaskType { createAccount, login };
 	
@@ -25,7 +27,7 @@ public class UserAccountTask extends AsyncTask<JSONObject, Void, Integer> {
 	}
 
 	@Override
-	protected Integer doInBackground(JSONObject... params) {
+	protected JSONObject doInBackground(JSONObject... params) {
 		try {
 			
 			//instantiates httpclient to make request
@@ -63,23 +65,30 @@ public class UserAccountTask extends AsyncTask<JSONObject, Void, Integer> {
 		    //Handles what is returned from the page 
 		    HttpResponse response = httpclient.execute(httpost);
 		    int status = response.getStatusLine().getStatusCode();
-		    if ( status == HttpStatus.SC_OK ) {
-		    	UserInfo.setUser( holder.getString("_id") );
-		    }
 		    Log.d("kahlen", "log in status = " + status);
 		    
-		    return status;
+		    String responseString = EntityUtils.toString(response.getEntity());
+		    JSONObject result = new JSONObject(responseString);
+		    result.put("statusCode", status);
+		    
+		    return result;
 			
 		    
 		} catch ( Exception e ) {
 			e.printStackTrace();
 		}
 		
-		return HttpStatus.SC_INTERNAL_SERVER_ERROR;		
+		JSONObject result = new JSONObject();
+	    try {
+			result.put("statusCode", HttpStatus.SC_INTERNAL_SERVER_ERROR);
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		return result;		
 	}
 
 	@Override
-	protected void onPostExecute(Integer result) {
+	protected void onPostExecute(JSONObject result) {
 		mCallback.loginResult( result );
 	}
 	

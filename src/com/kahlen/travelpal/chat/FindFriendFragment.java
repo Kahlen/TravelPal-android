@@ -5,7 +5,7 @@ import org.json.JSONObject;
 
 import com.kahlen.travelpal.MainFragment;
 import com.kahlen.travelpal.R;
-import com.kahlen.travelpal.account.UserInfo;
+import com.kahlen.travelpal.utilities.AccountUtils;
 
 import android.app.Activity;
 import android.app.Fragment;
@@ -64,7 +64,7 @@ public class FindFriendFragment extends Fragment implements FindFriendsCallback 
 	
 	private void getFriendsFromServer() {
 		FindFriendsTask task = new FindFriendsTask( mCallback );
-		task.execute( UserInfo.getUserId() );
+		task.execute( AccountUtils.getUserid(mContext) );
 	}
 
 	@Override
