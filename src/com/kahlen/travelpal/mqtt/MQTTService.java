@@ -227,6 +227,12 @@ public class MQTTService extends Service implements MqttCallback, MQTTTaskHandle
 					resultIntent.putExtra(DrawerActivity.INTENT_EXTRA_MESSAGE, new String(message.getPayload(), "UTF-8"));
 					notificationContent = "Itinerary updated!";
 					break;
+				case addFriend:	
+					resultIntent.putExtra(DrawerActivity.INTENT_EXTRA_MQTT_NOTIFICATION_TYPE, DrawerActivity.MQTTNotificationType.addFriend.ordinal());
+					resultIntent.putExtra(DrawerActivity.INTENT_EXTRA_TOPIC, topic);
+					resultIntent.putExtra(DrawerActivity.INTENT_EXTRA_MESSAGE, new String(message.getPayload(), "UTF-8"));
+					notificationContent = "Someone added you as friend!";
+					break;
 				case unknown:
 					break;
 			}
@@ -268,6 +274,8 @@ public class MQTTService extends Service implements MqttCallback, MQTTTaskHandle
 			return DrawerActivity.MQTTNotificationType.addItinerary;
 		else if ( DrawerActivity.MQTTNotificationType.updateItinerary.name().equals(type) )
 			return DrawerActivity.MQTTNotificationType.updateItinerary;
+		else if ( DrawerActivity.MQTTNotificationType.addFriend.name().equals(type) )
+			return DrawerActivity.MQTTNotificationType.addFriend;
 		else
 			return DrawerActivity.MQTTNotificationType.unknown;
 	}

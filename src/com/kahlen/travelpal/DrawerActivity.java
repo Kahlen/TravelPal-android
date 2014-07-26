@@ -36,7 +36,7 @@ import android.widget.Toast;
 public class DrawerActivity extends Activity implements FindFriendFragment.FindFriendListener, NewTripListener, MQTTActivityCallBack, MQTTErrorCallBack {
 	
 	public static enum DrawerType { home, mytrip, newtrip, friends, me };
-	public static enum MQTTNotificationType { newChat, addItinerary, updateItinerary, unknown };
+	public static enum MQTTNotificationType { newChat, addItinerary, updateItinerary, addFriend, unknown };
 	final public static String INTENT_EXTRA_MQTT_NOTIFICATION_TYPE = "mqtt_notification_type";
 	final public static String INTENT_EXTRA_TOPIC = "topic";
 	final public static String INTENT_EXTRA_MESSAGE = "message";
@@ -106,6 +106,7 @@ public class DrawerActivity extends Activity implements FindFriendFragment.FindF
 				break;
 			case addItinerary:
 			case updateItinerary:
+			case addFriend:
 			case unknown:
 				selectItem(DrawerType.home);
 				break;
