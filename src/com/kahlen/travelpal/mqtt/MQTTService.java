@@ -171,6 +171,7 @@ public class MQTTService extends Service implements MqttCallback, MQTTTaskHandle
 		if ( mClient == null ) {
 			Log.d("kahlen", "MQTTService error, stop service!");
 			stopSelf();
+			return false;
 		}
 		return mClient.isConnected(); 
 	}
