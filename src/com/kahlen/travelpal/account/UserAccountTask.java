@@ -1,4 +1,4 @@
-package com.kahlen.travelpal.user;
+package com.kahlen.travelpal.account;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
@@ -12,31 +12,47 @@ import com.kahlen.travelpal.mqtt.MQTTConfiguration;
 import android.os.AsyncTask;
 import android.util.Log;
 
-public class UserLoginTask extends AsyncTask<JSONObject, Void, Integer> {
+public class UserAccountTask extends AsyncTask<JSONObject, Void, Integer> {
 	
-	private UserLoginCallback mCallback;
+	public static enum TaskType { createAccount, login };
 	
-	public UserLoginTask( UserLoginCallback callback ) {
+	private UserAccountCallback mCallback;
+	private TaskType mType;
+	
+	public UserAccountTask( UserAccountCallback callback, TaskType type ) {
 		mCallback = callback;
+		mType = type;
 	}
 
 	@Override
 	protected Integer doInBackground(JSONObject... params) {
 		try {
+			
 			//instantiates httpclient to make request
 		    DefaultHttpClient httpclient = new DefaultHttpClient();
 
 		    //url with the post data
-		    String path = MQTTConfiguration.LOGIN_URI;
-		    HttpPost httpost = new HttpPost(path);
+		    String path = "";
+		    
+			
+			switch ( mType ) {
+				case createAccount:
+					path = MQTTConfiguration.CREATE_ACCOUNT_URI;
+				    
+					break;
+				case login:
+					path = MQTTConfiguration.LOGIN_URI;
+					break;    
+			}
+			
+			HttpPost httpost = new HttpPost(path);
 
 		    //convert parameters into JSON object
 		    JSONObject holder = params[0];
-		    Log.d("kahlen", "login params = " + holder);
+		    Log.d("kahlen", "UserAccountTask params = " + holder);
 
 		    //passes the results to a string builder/entity
 		    StringEntity se = new StringEntity(holder.toString());
-
 		    //sets the post request as the resulting string
 		    httpost.setEntity(se);
 		    //sets a request header so the page receving the request
@@ -53,6 +69,7 @@ public class UserLoginTask extends AsyncTask<JSONObject, Void, Integer> {
 		    Log.d("kahlen", "log in status = " + status);
 		    
 		    return status;
+			
 		    
 		} catch ( Exception e ) {
 			e.printStackTrace();

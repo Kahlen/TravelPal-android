@@ -10,7 +10,7 @@ import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 import com.kahlen.travelpal.DrawerActivity;
 import com.kahlen.travelpal.MyApplication;
 import com.kahlen.travelpal.R;
-import com.kahlen.travelpal.user.UserInfo;
+import com.kahlen.travelpal.account.UserInfo;
 
 import android.app.NotificationManager;
 import android.app.PendingIntent;

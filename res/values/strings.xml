@@ -33,6 +33,8 @@
     
     <!-- Log in page -->
     <string name="login">Log in</string>
+    <!-- Create account page -->
+    <string name="create_account">Create account</string>
     
     <!-- New trip -->
     <string name="next">Next</string>

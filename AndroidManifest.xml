@@ -29,6 +29,16 @@
             </intent-filter>
         </activity>
         
+        <activity
+            android:name=".account.LoginAccountActivity"
+            android:label="@string/app_name"
+            android:theme="@android:style/Theme.NoTitleBar" />
+        
+        <activity
+            android:name=".account.CreateAccountActivity"
+            android:label="@string/app_name"
+            android:theme="@android:style/Theme.NoTitleBar" />
+        
         <activity 
             android:name=".DrawerActivity" />
         

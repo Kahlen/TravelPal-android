@@ -5,10 +5,10 @@ import org.json.JSONObject;
 
 import com.kahlen.travelpal.DrawerActivity;
 import com.kahlen.travelpal.R;
+import com.kahlen.travelpal.account.UserInfo;
 import com.kahlen.travelpal.mqtt.MQTTActivityCallBack;
 import com.kahlen.travelpal.mqtt.MQTTService;
 import com.kahlen.travelpal.mqtt.MQTTServiceDelegate;
-import com.kahlen.travelpal.user.UserInfo;
 
 import android.os.Bundle;
 import android.app.Fragment;

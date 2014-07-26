@@ -1,5 +1,6 @@
 package com.kahlen.travelpal;
 
+import com.kahlen.travelpal.account.UserInfo;
 import com.kahlen.travelpal.chat.ChatFragment;
 import com.kahlen.travelpal.chat.FindFriendFragment;
 import com.kahlen.travelpal.mqtt.MQTTActivityCallBack;
@@ -10,7 +11,6 @@ import com.kahlen.travelpal.mqtt.MQTTServiceDelegate;
 import com.kahlen.travelpal.newtrip.NewTripFriendsFragment;
 import com.kahlen.travelpal.newtrip.NewTripFragment;
 import com.kahlen.travelpal.newtrip.NewTripListener;
-import com.kahlen.travelpal.user.UserInfo;
 
 import android.os.Bundle;
 import android.app.Activity;

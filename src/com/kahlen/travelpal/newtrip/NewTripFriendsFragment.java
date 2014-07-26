@@ -8,8 +8,8 @@ import org.json.JSONObject;
 
 import com.kahlen.travelpal.MainFragment;
 import com.kahlen.travelpal.R;
+import com.kahlen.travelpal.account.UserInfo;
 import com.kahlen.travelpal.chat.FriendModel;
-import com.kahlen.travelpal.user.UserInfo;
 
 import android.app.Activity;
 import android.app.Fragment;

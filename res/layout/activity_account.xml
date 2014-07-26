@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@drawable/bg4"
+    android:padding="10dp" >
+    
+    <LinearLayout
+        android:id="@+id/main_up"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:gravity="center_horizontal|bottom">
+        
+        <Button
+            android:id="@+id/main_create_account_btn"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:layout_gravity="center_horizontal"
+	        android:text="@string/create_account"
+	        style="@style/login_btn_style" />
+
+    </LinearLayout>
+    
+    <LinearLayout
+        android:id="@+id/main_down"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="vertical">
+        
+        <Button
+            android:id="@+id/main_login_btn"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:layout_gravity="center_horizontal"
+	        android:text="@string/login"
+	        style="@style/login_btn_style" />
+        
+    </LinearLayout>
+
+</LinearLayout>

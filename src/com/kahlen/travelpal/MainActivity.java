@@ -3,8 +3,10 @@ package com.kahlen.travelpal;
 import org.apache.http.HttpStatus;
 import org.json.JSONObject;
 
-import com.kahlen.travelpal.user.UserLoginCallback;
-import com.kahlen.travelpal.user.UserLoginTask;
+import com.kahlen.travelpal.account.CreateAccountActivity;
+import com.kahlen.travelpal.account.LoginAccountActivity;
+import com.kahlen.travelpal.account.UserAccountCallback;
+import com.kahlen.travelpal.account.UserAccountTask;
 
 import android.app.Activity;
 import android.content.Context;
@@ -17,17 +19,17 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-public class MainActivity extends Activity implements UserLoginCallback {
+public class MainActivity extends Activity implements UserAccountCallback {
 	
-	UserLoginCallback mCallback = this;
+	UserAccountCallback mCallback = this;
 	Context mContext = this;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
-		setContentView( R.layout.activity_login );
-		setLogInBtn();
+		setContentView( R.layout.activity_account );
+		setBtns();
 	}
 	
 	@Override
@@ -42,35 +44,27 @@ public class MainActivity extends Activity implements UserLoginCallback {
 		MyApplication.activityPaused();
 	}
 	
-	private void setLogInBtn() {
-		Button loginBtn = (Button) findViewById( R.id.login_btn );
+	private void setBtns() {
+		Button createBtn = (Button) findViewById( R.id.main_create_account_btn );
+		createBtn.setOnClickListener( new OnClickListener() {
+
+			@Override
+			public void onClick(View arg0) {
+				Intent intent = new Intent( mContext, CreateAccountActivity.class );
+				startActivity( intent );
+				finish();
+			}
+			
+		});
+		
+		Button loginBtn = (Button) findViewById( R.id.main_login_btn );
 		loginBtn.setOnClickListener( new OnClickListener() {
 
 			@Override
 			public void onClick(View arg0) {
-				Log.d("kahlen", "login button clicked");
-				// check if both username and password are not empty
-				EditText userEditTxt = (EditText) findViewById(R.id.user_id_edit_txt);
-				EditText passwordEditTxt = (EditText) findViewById(R.id.user_password_edit_txt);
-				String username = userEditTxt.getText().toString().replaceAll("\\s+","");
-				String password = passwordEditTxt.getText().toString().replaceAll("\\s+","");
-				if ( username.isEmpty() || password.isEmpty() ) {
-					Toast.makeText(mContext, "username or password is wrong", Toast.LENGTH_LONG).show();
-				} else {
-					try {
-						Log.d("kahlen", "start to log in");
-						JSONObject params = new JSONObject();
-						params.put("_id", username);
-						params.put("password", password);
-						params.put("name", "");
-						UserLoginTask task = new UserLoginTask( mCallback );
-						task.execute(params);
-					} catch ( Exception e ) {
-						e.printStackTrace();
-					}
-					
-				}
-
+				Intent intent = new Intent( mContext, LoginAccountActivity.class );
+				startActivity( intent );
+				finish();
 			}
 			
 		});

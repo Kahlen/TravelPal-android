@@ -1,7 +1,7 @@
 package com.kahlen.travelpal.chat;
 
+import com.kahlen.travelpal.account.UserInfo;
 import com.kahlen.travelpal.mqtt.MQTTConfiguration;
-import com.kahlen.travelpal.user.UserInfo;
 
 public class ChatMessageModel {
 	public String message;

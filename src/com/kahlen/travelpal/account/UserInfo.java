@@ -1,4 +1,4 @@
-package com.kahlen.travelpal.user;
+package com.kahlen.travelpal.account;
 
 public class UserInfo {
 	
