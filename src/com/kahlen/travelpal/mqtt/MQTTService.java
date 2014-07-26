@@ -38,6 +38,8 @@ public class MQTTService extends Service implements MqttCallback, MQTTTaskHandle
 	private final IBinder mBinder = new MQTTServiceBinder();
 		
 	private static MqttClient mClient;
+	
+	public static boolean isServiceRunning = false;
 
 	@Override
 	public void onCreate() {
@@ -61,7 +63,8 @@ public class MQTTService extends Service implements MqttCallback, MQTTTaskHandle
 	}
 
 	@Override
-	public int onStartCommand(Intent intent, int flags, int startId) {		
+	public int onStartCommand(Intent intent, int flags, int startId) {	
+		isServiceRunning = true;
 		String action = intent.getAction();
 		Log.d("kahlen", "MQTTService action: " + action);
 		if ( ACTION_CONNECT.equals(action) ) {
@@ -95,6 +98,7 @@ public class MQTTService extends Service implements MqttCallback, MQTTTaskHandle
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
+		isServiceRunning = false;
 		disconnectMQTTServer();
 	}
 	

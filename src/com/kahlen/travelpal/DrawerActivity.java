@@ -13,7 +13,6 @@ import com.kahlen.travelpal.newtrip.NewTripListener;
 import com.kahlen.travelpal.utilities.AccountUtils;
 
 import android.os.Bundle;
-import android.accounts.AccountManager;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Fragment;
