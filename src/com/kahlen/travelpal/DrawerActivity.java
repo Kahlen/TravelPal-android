@@ -7,6 +7,7 @@ import com.kahlen.travelpal.mqtt.MQTTConfiguration;
 import com.kahlen.travelpal.mqtt.MQTTErrorCallBack;
 import com.kahlen.travelpal.mqtt.MQTTService;
 import com.kahlen.travelpal.mqtt.MQTTServiceDelegate;
+import com.kahlen.travelpal.mytrip.MyTripFragment;
 import com.kahlen.travelpal.newtrip.NewTripFriendsFragment;
 import com.kahlen.travelpal.newtrip.NewTripFragment;
 import com.kahlen.travelpal.newtrip.NewTripListener;
@@ -159,12 +160,22 @@ public class DrawerActivity extends Activity implements FindFriendFragment.FindF
     	int positionInt = position.ordinal();
     	switch ( position ) {
     		case home:
-    		case mytrip:
     		case me:
     			// update the main content by replacing fragments
     			Fragment mainFragment = new MainFragment();
     			mainFragment.setArguments(args);
     	        fragmentManager.beginTransaction().replace(R.id.content_frame, mainFragment ).commit();
+
+    	        // update selected item and title, then close the drawer
+    	        mDrawerList.setItemChecked(positionInt, true);
+    	        setTitle(mPlanetTitles[positionInt]);
+    	        mDrawerLayout.closeDrawer(mDrawerList);
+    	        break;
+    		case mytrip:
+    			// update the main content by replacing fragments
+    			Fragment mytripFragment = new MyTripFragment();
+    			mytripFragment.setArguments(args);
+    	        fragmentManager.beginTransaction().replace(R.id.content_frame, mytripFragment ).commit();
 
     	        // update selected item and title, then close the drawer
     	        mDrawerList.setItemChecked(positionInt, true);

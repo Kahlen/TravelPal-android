@@ -11,4 +11,5 @@ public class MQTTConfiguration {
 	final public static String GET_CHAT_HISTORY = SERVER_URL + "/history";
 	final public static String FIND_FRIENDS_WITH_RELATION_URI = SERVER_URL + "/searchff";
 	final public static String ADD_ITINERARY_URI = SERVER_URL + "/additinerary";
+	final public static String GET_MY_TRIPS_URI = SERVER_URL + "/itinerary";
 }
