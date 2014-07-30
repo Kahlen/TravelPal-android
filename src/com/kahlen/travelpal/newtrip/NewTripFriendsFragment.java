@@ -1,6 +1,7 @@
 package com.kahlen.travelpal.newtrip;
 
 import java.util.ArrayList;
+import java.util.UUID;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -128,6 +129,7 @@ public class NewTripFriendsFragment extends Fragment implements NewTripFriendsCa
 		Bundle data = getArguments();
 		JSONObject requestBody = new JSONObject();
 		try {
+			requestBody.put("_id", UUID.randomUUID().toString());
 			requestBody.put( "user" , userid);
 			requestBody.put("destination", data.getString(NewTripFragment.NEW_TRIP_DESTINATION));
 			requestBody.put("start", data.getString(NewTripFragment.NEW_TRIP_START_DATE));
