@@ -8,6 +8,9 @@ import com.kahlen.travelpal.mqtt.MQTTErrorCallBack;
 import com.kahlen.travelpal.mqtt.MQTTService;
 import com.kahlen.travelpal.mqtt.MQTTServiceDelegate;
 import com.kahlen.travelpal.mytrip.MyTripFragment;
+import com.kahlen.travelpal.mytrip.MyTripListener;
+import com.kahlen.travelpal.mytrip.MyTripModel;
+import com.kahlen.travelpal.mytrip.TripContentFragment;
 import com.kahlen.travelpal.newtrip.NewTripFriendsFragment;
 import com.kahlen.travelpal.newtrip.NewTripFragment;
 import com.kahlen.travelpal.newtrip.NewTripListener;
@@ -34,7 +37,7 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
-public class DrawerActivity extends Activity implements FindFriendFragment.FindFriendListener, NewTripListener, MQTTActivityCallBack, MQTTErrorCallBack {
+public class DrawerActivity extends Activity implements FindFriendFragment.FindFriendListener, NewTripListener, MyTripListener, MQTTActivityCallBack, MQTTErrorCallBack {
 	
 	public static enum DrawerType { home, mytrip, newtrip, friends, me };
 	public static enum MQTTNotificationType { newChat, addItinerary, updateItinerary, addFriend, unknown };
@@ -271,6 +274,20 @@ public class DrawerActivity extends Activity implements FindFriendFragment.FindF
 		// go back to home page
 		selectItem(DrawerType.home);
 	}
+
+	// --- callback from MyTripFragment ---
+	@Override
+	public void go2TripContent(MyTripModel model) {
+		Fragment fragment = new TripContentFragment();
+		Bundle bundle = new Bundle();
+		bundle.putInt(MainFragment.DRAWER_SELECTED_POSITION, DrawerType.mytrip.ordinal());
+		bundle.putString(TripContentFragment.TRIP_CONTENT_IID, model.id);
+		fragment.setArguments(bundle);
+		
+		FragmentManager fragmentManager = getFragmentManager();
+        // add NewTripFragment to stack, so when back key is pressed on NewTripFriendsFragment, it will go back to NewTripFragment
+        fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).addToBackStack("MyTripFragment").commit();
+	}
 	
 	// --- MQTT ---
 	private void connect2Mqtt() {
@@ -363,6 +380,5 @@ public class DrawerActivity extends Activity implements FindFriendFragment.FindF
 		}
 		return super.onMenuItemSelected(featureId, item);
 	}
-
 
 }

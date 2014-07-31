@@ -7,8 +7,10 @@ import org.json.JSONObject;
 
 import com.kahlen.travelpal.MainFragment;
 import com.kahlen.travelpal.R;
+import com.kahlen.travelpal.newtrip.NewTripListener;
 import com.kahlen.travelpal.utilities.AccountUtils;
 
+import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
@@ -26,6 +28,7 @@ public class MyTripFragment extends Fragment implements MyTripCallback {
 	private View mRootView;
 	private ListView mListView;
 	private MyTripAdapter mAdapter;
+	private MyTripListener activityCallback;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -44,6 +47,17 @@ public class MyTripFragment extends Fragment implements MyTripCallback {
 	    return mRootView;
 	}
 	
+	@Override
+	public void onAttach(Activity activity) {
+		super.onAttach(activity);
+		
+		try {
+			activityCallback = (MyTripListener) activity;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(activity.toString() + " must implement OnHeadlineSelectedListener");
+        }
+	}
+	
 	private void initListView() {
 		mListView = (ListView) mRootView.findViewById( R.id.mytrip_listview );
 		mAdapter = new MyTripAdapter( mContext, R.layout.mytrip_list_item );
@@ -52,8 +66,8 @@ public class MyTripFragment extends Fragment implements MyTripCallback {
 
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
-				// TODO Auto-generated method stub
-				
+				MyTripModel tripModel = (MyTripModel) arg0.getItemAtPosition(arg2);
+				activityCallback.go2TripContent(tripModel);
 			}
 			
 		});

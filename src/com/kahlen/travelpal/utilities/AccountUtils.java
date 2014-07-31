@@ -1,17 +1,47 @@
 package com.kahlen.travelpal.utilities;
 
+import org.json.JSONObject;
+
+import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 
 import com.kahlen.travelpal.account.AccountMainActivity;
+import com.kahlen.travelpal.account.UserModel;
 import com.kahlen.travelpal.mqtt.MQTTService;
 
 public class AccountUtils {
 
 	public static String getUserid( Context context ) {
 		return AccountManager.get(context).getAccountsByType(AccountMainActivity.TRAVELPAL_ACCOUNT_TYPE)[0].name;
+	}
+	
+	public static String getUserName( Context context ) {
+		Account account = AccountManager.get(context).getAccountsByType(AccountMainActivity.TRAVELPAL_ACCOUNT_TYPE)[0];
+		return AccountManager.get(context).getUserData(account, AccountMainActivity.ACCOUNT_USER_DATA_USER_NAME);
+	}
+	
+	public static UserModel getUserModel( Context context ) {
+		Account account = AccountManager.get(context).getAccountsByType(AccountMainActivity.TRAVELPAL_ACCOUNT_TYPE)[0];
+		String id = account.name;
+		String password = AccountManager.get(context).getPassword(account);
+		String name = AccountManager.get(context).getUserData(account, AccountMainActivity.ACCOUNT_USER_DATA_USER_NAME);
+		return new UserModel( id, password, name );
+	}
+	
+	public static JSONObject getUserJson( Context context ) {
+		UserModel model = getUserModel( context );
+		JSONObject result = new JSONObject();
+		try {
+			result.put("_id", model.id);
+			result.put("password", model.password);
+			result.put("name", model.name);
+		} catch ( Exception e ) {
+			e.printStackTrace();
+		}
+		return result;
 	}
 	
 	public static boolean isLoggedin( Context context ) {

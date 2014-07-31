@@ -12,4 +12,7 @@ public class MQTTConfiguration {
 	final public static String FIND_FRIENDS_WITH_RELATION_URI = SERVER_URL + "/searchff";
 	final public static String ADD_ITINERARY_URI = SERVER_URL + "/additinerary";
 	final public static String GET_MY_TRIPS_URI = SERVER_URL + "/itinerary";
+	final public static String GET_TRIP_CONTENT_URI = SERVER_URL + "/getitineraryjson";
+	final public static String COMMENT_ITINERARY = SERVER_URL + "/itinerarycomment";
+	final public static String CREATE_FEED_ITINERARY = SERVER_URL + "/updateitinerary";
 }
