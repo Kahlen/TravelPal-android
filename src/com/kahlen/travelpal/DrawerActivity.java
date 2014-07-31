@@ -44,6 +44,8 @@ public class DrawerActivity extends Activity implements FindFriendFragment.FindF
 	final public static String INTENT_EXTRA_MQTT_NOTIFICATION_TYPE = "mqtt_notification_type";
 	final public static String INTENT_EXTRA_TOPIC = "topic";
 	final public static String INTENT_EXTRA_MESSAGE = "message";
+
+	final public static String INTENT_EXTRA_ITINERARY_IID = "itinerary_iid";
 	
 	private Context mContext;
 	
@@ -100,16 +102,31 @@ public class DrawerActivity extends Activity implements FindFriendFragment.FindF
 
         Intent intent = getIntent();
 		int mqttNotificationType = intent.getIntExtra(INTENT_EXTRA_MQTT_NOTIFICATION_TYPE, MQTTNotificationType.unknown.ordinal());
+		String topic = intent.getStringExtra(INTENT_EXTRA_TOPIC);
 		Log.d("kahlen", "from notification type: " + MQTTNotificationType.values()[mqttNotificationType] );
 		switch ( MQTTNotificationType.values()[mqttNotificationType] ) {
 			case newChat:
 				// get new message when in
-				String topic = intent.getStringExtra("topic");
 				String friendId = topic.split("/")[1];
 				friendIdSelected(friendId);
 				break;
 			case addItinerary:
+				selectItem(DrawerType.mytrip);
+				break;
 			case updateItinerary:
+				String[] topicHie = topic.split("/");
+				String iid = topicHie[topicHie.length-2];
+				
+				Fragment fragment = new TripContentFragment();
+				Bundle bundle = new Bundle();
+				bundle.putInt(MainFragment.DRAWER_SELECTED_POSITION, DrawerType.mytrip.ordinal());
+				bundle.putString(TripContentFragment.TRIP_CONTENT_IID, iid);
+				fragment.setArguments(bundle);
+				
+				FragmentManager fragmentManager = getFragmentManager();
+		        // add NewTripFragment to stack, so when back key is pressed on NewTripFriendsFragment, it will go back to NewTripFragment
+		        fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
+				break;
 			case addFriend:
 			case unknown:
 				selectItem(DrawerType.home);

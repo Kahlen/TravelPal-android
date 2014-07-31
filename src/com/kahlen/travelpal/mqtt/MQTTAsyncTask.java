@@ -34,13 +34,15 @@ public class MQTTAsyncTask extends AsyncTask<Object, Void, Exception> {
 			case connect:
 				
 				try {
-					MqttCallback callback = (MqttCallback) params[1];
-					MqttConnectOptions options = new MqttConnectOptions();
-					// set clean session to false so that when reconnected, it gets messages happen when the connection was lost
-					options.setCleanSession( false );
-					options.setKeepAliveInterval(30);
-					mClient.setCallback(callback);
-					mClient.connect( options );
+					if ( !mClient.isConnected() ) {
+						MqttCallback callback = (MqttCallback) params[1];
+						MqttConnectOptions options = new MqttConnectOptions();
+						// set clean session to false so that when reconnected, it gets messages happen when the connection was lost
+						options.setCleanSession( false );
+						options.setKeepAliveInterval(30);
+						mClient.setCallback(callback);
+						mClient.connect( options );
+					}	
 		        } catch (MqttException e) {
 		            e.printStackTrace();
 		            return e;
