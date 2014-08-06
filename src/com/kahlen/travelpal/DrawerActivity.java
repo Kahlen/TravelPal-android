@@ -2,6 +2,7 @@ package com.kahlen.travelpal;
 
 import com.kahlen.travelpal.chat.ChatFragment;
 import com.kahlen.travelpal.chat.FindFriendFragment;
+import com.kahlen.travelpal.gcm.GCMController;
 import com.kahlen.travelpal.mqtt.MQTTActivityCallBack;
 import com.kahlen.travelpal.mqtt.MQTTConfiguration;
 import com.kahlen.travelpal.mqtt.MQTTErrorCallBack;
@@ -132,6 +133,11 @@ public class DrawerActivity extends Activity implements FindFriendFragment.FindF
 				selectItem(DrawerType.home);
 				break;
 		}
+		
+		
+		// register GCM
+		GCMController.registerIfNeed( this );
+		
 	}
 
 	@Override
@@ -339,63 +345,5 @@ public class DrawerActivity extends Activity implements FindFriendFragment.FindF
 		return true;
 	}
 
-	@Override
-	public boolean onMenuItemSelected(int featureId, MenuItem item) {
-		
-		switch( item.getItemId() ) {
-			case R.id.menu_connect:
-				// start service
-				Intent intent = new Intent(mContext, MQTTService.class);
-				intent.setAction( MQTTService.ACTION_CONNECT );
-		        mContext.startService(intent);	
-				
-				break;
-			case R.id.menu_subscribe:
-				// show popup input dialog
-				// use Activity.this for AlertDialog to avoid exception
-				// alertdialog Unable to add window -- token null is not for an application
-				AlertDialog.Builder alert = new AlertDialog.Builder( DrawerActivity.this );
-				alert.setTitle( R.string.dialog_title_subscribe );
-				alert.setMessage( R.string.dialog_message_subscribe );
-				final EditText input = new EditText( mContext );
-				alert.setView(input);
-				alert.setPositiveButton( R.string.ok , new DialogInterface.OnClickListener() {
-					public void onClick(DialogInterface dialog, int whichButton) {
-						String topic = input.getText().toString();
-						// subscribe
-						Intent intent = new Intent(mContext, MQTTService.class);
-						intent.setAction( MQTTService.ACTION_SUBSCRIBE );
-						intent.putExtra( MQTTService.INTENT_EXTRA_SUBSCRIBE_TOPIC, topic );
-				        mContext.startService(intent);	
-					}
-				});
-				alert.show();
-				
-				break;
-			case R.id.menu_check_connection:
-				// check connection, show toast message
-//				if ( mController.isConnected() )
-//					Toast.makeText(mContext, R.string.connected, Toast.LENGTH_LONG).show();
-//				else
-//					Toast.makeText(mContext, R.string.not_connected, Toast.LENGTH_LONG).show();
-				break;
-			case R.id.menu_server:
-				AlertDialog.Builder alert2 = new AlertDialog.Builder( DrawerActivity.this );
-				alert2.setTitle( R.string.server );
-				alert2.setMessage( R.string.dialog_message_server );
-				final EditText input2 = new EditText( mContext );
-				alert2.setView(input2);
-				alert2.setPositiveButton( R.string.ok , new DialogInterface.OnClickListener() {
-					public void onClick(DialogInterface dialog, int whichButton) {
-						String server = input2.getText().toString();
-						// subscribe
-						MQTTConfiguration.BROKER_URL = server;
-					}
-				});
-				alert2.show();
-				break;
-		}
-		return super.onMenuItemSelected(featureId, item);
-	}
 
 }

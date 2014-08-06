@@ -15,4 +15,7 @@ public class MQTTConfiguration {
 	final public static String GET_TRIP_CONTENT_URI = SERVER_URL + "/getitineraryjson";
 	final public static String COMMENT_ITINERARY = SERVER_URL + "/itinerarycomment";
 	final public static String CREATE_FEED_ITINERARY = SERVER_URL + "/updateitinerary";
+	
+	// GCM
+	final public static String REGISTER_GCM = SERVER_URL + "/registergcm";
 }
