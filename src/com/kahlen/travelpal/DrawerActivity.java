@@ -101,6 +101,11 @@ public class DrawerActivity extends Activity implements FindFriendFragment.FindF
         mDrawerLayout.setDrawerListener(mDrawerToggle);
 
         Intent intent = getIntent();
+        if ( Intent.ACTION_SEND.equals( intent.getAction() ) ) {
+        	selectItem(DrawerType.mytrip);        	
+        	return;
+        }
+        
 		int mqttNotificationType = intent.getIntExtra(INTENT_EXTRA_MQTT_NOTIFICATION_TYPE, MQTTNotificationType.unknown.ordinal());
 		String topic = intent.getStringExtra(INTENT_EXTRA_TOPIC);
 		Log.d("kahlen", "from notification type: " + MQTTNotificationType.values()[mqttNotificationType] );
@@ -192,6 +197,17 @@ public class DrawerActivity extends Activity implements FindFriendFragment.FindF
     	        mDrawerLayout.closeDrawer(mDrawerList);
     	        break;
     		case mytrip:
+    			Intent intent = getIntent();
+    			if ( Intent.ACTION_SEND.equals( intent.getAction() ) ) {
+    	        	String shareText = intent.getStringExtra(Intent.EXTRA_TEXT);
+    	        	int urlStartIndex = shareText.lastIndexOf("http");
+    	        	if ( urlStartIndex != -1) {
+    	        		String sharedLink = shareText.substring(urlStartIndex);
+    	        		if ( sharedLink.contains("://") )
+    	        			args.putString(MyTripFragment.ARGS_SHARED_LINK_URL, sharedLink);
+    	        	}
+    	        }
+    			
     			// update the main content by replacing fragments
     			Fragment mytripFragment = new MyTripFragment();
     			mytripFragment.setArguments(args);
@@ -295,6 +311,12 @@ public class DrawerActivity extends Activity implements FindFriendFragment.FindF
 	// --- callback from MyTripFragment ---
 	@Override
 	public void go2TripContent(MyTripModel model) {
+		go2TripContent(model, null);
+	}
+	
+	@Override
+	public void go2TripContent(MyTripModel model, String sharedLink) {
+		Log.d("kahlen","share link to feed: " + sharedLink);
 		Fragment fragment = new TripContentFragment();
 		Bundle bundle = new Bundle();
 		bundle.putInt(MainFragment.DRAWER_SELECTED_POSITION, DrawerType.mytrip.ordinal());
@@ -302,6 +324,10 @@ public class DrawerActivity extends Activity implements FindFriendFragment.FindF
 		bundle.putString(TripContentFragment.TRIP_CONTENT_DESTINATION, model.destination);
 		String travelTime = model.startDate + " ~ " + model.endDate;
 		bundle.putString(TripContentFragment.TRIP_CONTENT_TRAVEL_TIME, travelTime);
+		
+		if ( sharedLink != null && !sharedLink.isEmpty() ) {
+			bundle.putString(MyTripFragment.ARGS_SHARED_LINK_URL, sharedLink);
+		}
 		fragment.setArguments(bundle);
 		
 		FragmentManager fragmentManager = getFragmentManager();

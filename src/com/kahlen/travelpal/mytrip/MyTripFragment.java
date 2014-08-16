@@ -24,6 +24,8 @@ import android.widget.ListView;
 
 public class MyTripFragment extends Fragment implements MyTripCallback {
 	
+	public final static String ARGS_SHARED_LINK_URL = "shared_link_url";
+	
 	private Context mContext;
 	private View mRootView;
 	private ListView mListView;
@@ -67,7 +69,8 @@ public class MyTripFragment extends Fragment implements MyTripCallback {
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
 				MyTripModel tripModel = (MyTripModel) arg0.getItemAtPosition(arg2);
-				activityCallback.go2TripContent(tripModel);
+				activityCallback.go2TripContent(tripModel, getArguments().getString(ARGS_SHARED_LINK_URL, null));
+				getArguments().putString(ARGS_SHARED_LINK_URL, null);
 			}
 			
 		});

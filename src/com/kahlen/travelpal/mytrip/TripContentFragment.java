@@ -36,6 +36,7 @@ public class TripContentFragment extends Fragment implements TripContentCallback
 	private ListView mListView;
 	private TripContentAdapter mAdapter;
 	private String mIid;
+	private String mSharedLink;
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -44,6 +45,7 @@ public class TripContentFragment extends Fragment implements TripContentCallback
 		mRootView = inflater.inflate(R.layout.activity_trip_content, container, false);
 		
 		Bundle data = getArguments();
+		mIid = data.getString(TRIP_CONTENT_IID);
 //	    int i = data.getInt(MainFragment.DRAWER_SELECTED_POSITION);
 //	    String title = getResources().getStringArray(R.array.activity_titles)[i];
 //	    getActivity().setTitle(title);
@@ -52,8 +54,8 @@ public class TripContentFragment extends Fragment implements TripContentCallback
 	    
 	    setCreateFeedBtn();
 	    initListView();
-	    mIid = data.getString(TRIP_CONTENT_IID);
 	    getTripContentFromServer( mIid );
+	    mSharedLink = data.getString(MyTripFragment.ARGS_SHARED_LINK_URL, null);
 		
 		return mRootView;
 	}
@@ -116,6 +118,30 @@ public class TripContentFragment extends Fragment implements TripContentCallback
 		task.execute(iid);
 	}
 
+	private void processSharedLink(String sharedLink) {	
+		if ( sharedLink == null || sharedLink.isEmpty() )
+			return;
+		
+		long feedTime = System.currentTimeMillis();
+		JSONObject requestBody = new JSONObject();
+		try {
+			requestBody.put("_id", mIid);
+			JSONObject dataRequestBody = new JSONObject();
+			dataRequestBody.put("user", AccountUtils.getUserJson(mContext));
+			dataRequestBody.put("feed", sharedLink);
+			dataRequestBody.put("timestamp", feedTime);
+			requestBody.put("data", dataRequestBody);
+			TripContentFeedTask task = new TripContentFeedTask( mContext );
+			task.execute(requestBody);
+		} catch ( Exception e ) {
+			e.printStackTrace();
+		}
+		
+		TripContentFeedModel newFeed = new TripContentFeedModel( AccountUtils.getUserModel(mContext), sharedLink, feedTime, null );
+		mAdapter.insert(newFeed, 0);
+		mAdapter.notifyDataSetChanged();
+	}
+	
 	@Override
 	public void tripContentResult(JSONObject result) {
 		if ( result == null )
@@ -151,7 +177,8 @@ public class TripContentFragment extends Fragment implements TripContentCallback
 					mAdapter.notifyDataSetChanged();
 				}
 			}
-
+			processSharedLink( mSharedLink );
+			mSharedLink = null;
 		} catch ( Exception e ) {
 			e.printStackTrace();
 		}
