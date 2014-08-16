@@ -1,16 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:background="@color/white" >
+    android:background="@color/white">
     
     <TextView
         android:id="@+id/chat_item_txt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="@color/red"
-        android:background="@drawable/rounded_corner"
-        android:textSize="20sp" />
+        android:background="@drawable/bubble_yellow"
+        android:textSize="20sp"
+        android:padding="5dp"/>
 
 </LinearLayout>

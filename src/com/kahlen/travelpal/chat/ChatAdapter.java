@@ -5,11 +5,12 @@ import com.kahlen.travelpal.R;
 
 import android.content.Context;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.RelativeLayout;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 public class ChatAdapter extends ArrayAdapter<ChatMessageModel> {
@@ -32,13 +33,19 @@ public class ChatAdapter extends ArrayAdapter<ChatMessageModel> {
 		TextView textView = (TextView) convertView.findViewById( R.id.chat_item_txt );
 		textView.setText( msg.message );
 		
+		LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) textView.getLayoutParams();
+		
 		if ( msg.me ) {
-//			convertView.setBackgroundColor( mContext.getResources().getColor( android.R.color.background_light ) );
 			textView.setTextColor( mContext.getResources().getColor( R.color.red ) );
+			params.gravity = Gravity.RIGHT;
+			textView.setBackgroundResource(R.drawable.bubble_green);
 		} else {
-//			convertView.setBackgroundColor( mContext.getResources().getColor( android.R.color.background_dark ) );
 			textView.setTextColor( mContext.getResources().getColor( R.color.blue ) );
+			textView.setBackgroundResource(R.drawable.bubble_yellow);
+			params.gravity = Gravity.LEFT;
 		}
+		
+		textView.setLayoutParams(params);
 		
 		
 		return convertView;

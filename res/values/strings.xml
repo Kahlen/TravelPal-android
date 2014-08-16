@@ -46,7 +46,7 @@
     <string name="to">To: </string>
     
     <!-- My trip -->
-    <string name="create_feed">Write new details of the trip!</string>
+    <string name="create_feed">Click to write new details of the trip!</string>
     <string name="create_comment">Send</string>
     <string name="see_comment">See comment</string>
     

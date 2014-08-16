@@ -6,10 +6,11 @@
     
     <Button 
         android:id="@+id/trip_content_create_btn"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:text="@string/create_feed"/>
+        android:text="@string/create_feed"
+        android:background="@color/yellow"/>
     
     <ListView
 		android:id="@+id/trip_content_listview"
