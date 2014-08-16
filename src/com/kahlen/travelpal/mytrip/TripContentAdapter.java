@@ -11,6 +11,8 @@ import com.kahlen.travelpal.utilities.AccountUtils;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.text.Html;
+import android.text.method.LinkMovementMethod;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -51,7 +53,14 @@ public class TripContentAdapter extends ArrayAdapter<TripContentFeedModel> {
 		feedUserTxt.setText( contentModel.user.name + " (" + contentModel.user.id + ")" );
 		
 		TextView feedFeedTxt = (TextView) convertView.findViewById(R.id.trip_content_feed);
-		feedFeedTxt.setText( contentModel.feed );
+		if ( contentModel.feed.startsWith("http://") || contentModel.feed.startsWith("https://") ) {
+			// make text a link
+			feedFeedTxt.setText(Html.fromHtml("<a href=\"" + contentModel.feed + "\">" + contentModel.feed + "</a>"));
+			feedFeedTxt.setMovementMethod(LinkMovementMethod.getInstance());
+		} else {
+			// not a link
+			feedFeedTxt.setText( contentModel.feed );
+		}
 		
 		TextView seeCommentTxt = (TextView) convertView.findViewById(R.id.trip_content_comment_count_txt);
 		if ( contentModel.hasComments() ) {
