@@ -27,6 +27,7 @@ import android.widget.ListView;
 
 public class TripContentFragment extends Fragment implements TripContentCallback {
 	
+	final public static String TRIP_CONTENT_DESTINATION = "trip_content_destination";
 	final public static String TRIP_CONTENT_IID = "trip_content_iid";
 	
 	private Context mContext;
@@ -42,9 +43,10 @@ public class TripContentFragment extends Fragment implements TripContentCallback
 		mRootView = inflater.inflate(R.layout.activity_trip_content, container, false);
 		
 		Bundle data = getArguments();
-	    int i = data.getInt(MainFragment.DRAWER_SELECTED_POSITION);
-	    String title = getResources().getStringArray(R.array.activity_titles)[i];
-	    getActivity().setTitle(title);
+//	    int i = data.getInt(MainFragment.DRAWER_SELECTED_POSITION);
+//	    String title = getResources().getStringArray(R.array.activity_titles)[i];
+//	    getActivity().setTitle(title);
+	    getActivity().setTitle(data.getString(TRIP_CONTENT_DESTINATION));
 	    
 	    setCreateFeedBtn();
 	    initListView();

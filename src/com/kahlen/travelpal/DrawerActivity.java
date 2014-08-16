@@ -299,6 +299,7 @@ public class DrawerActivity extends Activity implements FindFriendFragment.FindF
 		Bundle bundle = new Bundle();
 		bundle.putInt(MainFragment.DRAWER_SELECTED_POSITION, DrawerType.mytrip.ordinal());
 		bundle.putString(TripContentFragment.TRIP_CONTENT_IID, model.id);
+		bundle.putString(TripContentFragment.TRIP_CONTENT_DESTINATION, model.destination);
 		fragment.setArguments(bundle);
 		
 		FragmentManager fragmentManager = getFragmentManager();
