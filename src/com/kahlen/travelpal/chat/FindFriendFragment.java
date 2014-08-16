@@ -1,15 +1,23 @@
 package com.kahlen.travelpal.chat;
 
+import org.apache.http.HttpResponse;
+import org.apache.http.HttpStatus;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.kahlen.travelpal.MainFragment;
 import com.kahlen.travelpal.R;
+import com.kahlen.travelpal.mqtt.MQTTConfiguration;
 import com.kahlen.travelpal.utilities.AccountUtils;
 
 import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -17,6 +25,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ListView;
 
 public class FindFriendFragment extends Fragment implements FindFriendsCallback {
@@ -57,6 +66,69 @@ public class FindFriendFragment extends Fragment implements FindFriendsCallback 
 				Log.d("kahlen", f.id + " is clicked");
 				// notify activity to change fragment
 				activityCallback.friendIdSelected( f.id );
+			}
+			
+		});
+		mListView.setOnItemLongClickListener( new OnItemLongClickListener() {
+
+			@Override
+			public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+				FriendModel f = (FriendModel) parent.getItemAtPosition(position);
+				Log.d("kahlen", f.id + " is long pressed");
+				final boolean addFriend = !f.isFriend;
+				f.isFriend = !f.isFriend;
+				mAdapter.notifyDataSetChanged();
+				final JSONObject requestBody = new JSONObject();
+				try {
+					requestBody.put("id", AccountUtils.getUserid(mContext));
+					requestBody.put("friend", f.id);
+				} catch (JSONException e) {
+					e.printStackTrace();
+				}
+				
+				new AsyncTask<Void, Void, Void>() {
+
+					@Override
+					protected Void doInBackground(Void... params) {
+						try {		 
+							//instantiates httpclient to make request
+						    DefaultHttpClient httpclient = new DefaultHttpClient();
+
+						    //url with the post data
+						    String path = MQTTConfiguration.ADD_FRIEND_URI;
+						    if ( !addFriend )
+						    	path = MQTTConfiguration.REMOVE_FRIEND_URI;
+						    HttpPost httpost = new HttpPost(path);
+
+						    //convert parameters into JSON object
+						    Log.d("kahlen", "requestBody = " + requestBody);
+
+						    //passes the results to a string builder/entity
+						    StringEntity se = new StringEntity(requestBody.toString());
+
+						    //sets the post request as the resulting string
+						    httpost.setEntity(se);
+						    //sets a request header so the page receving the request
+						    //will know what to do with it
+						    httpost.setHeader("Accept", "application/json");
+						    httpost.setHeader("Content-type", "application/json");
+
+						    //Handles what is returned from the page 
+						    HttpResponse response = httpclient.execute(httpost);
+						    int status = response.getStatusLine().getStatusCode();
+						    Log.d("kahlen", "add/remove friend status = " + status);
+						    if ( status == HttpStatus.SC_OK || status == HttpStatus.SC_CREATED ) {
+						    	Log.d("kahlen", "add/remove friend ok");
+						    }
+				 
+				        } catch (Exception e) {
+				            e.printStackTrace();
+				        }
+						return null;
+					}
+					
+				}.execute(null, null, null);
+				return false;
 			}
 			
 		});
