@@ -8,14 +8,18 @@
         android:id="@+id/newtrip_friends_destination"
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"
-        android:textSize="20sp"/>
+        android:textSize="20sp"
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp"/>
     
     <LinearLayout
         android:id="@+id/newtrip_friends_start_date"
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"
         android:orientation="horizontal"
-        android:layout_below="@id/newtrip_friends_destination">
+        android:layout_below="@id/newtrip_friends_destination"
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp">
         
         <TextView
             android:id="@+id/newtrip_friends_start_date_from"
@@ -37,7 +41,9 @@
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"
         android:orientation="horizontal"
-        android:layout_below="@id/newtrip_friends_start_date">
+        android:layout_below="@id/newtrip_friends_start_date"
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp">
         
         <TextView
             android:id="@+id/newtrip_friends_end_date_to"

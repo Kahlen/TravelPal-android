@@ -2,22 +2,22 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical" >
+    android:orientation="vertical"
+    android:background="@color/white"
+    android:padding="8dp" >
     
     <TextView
         android:id="@+id/trip_content_feed_user"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="15dp"
-        android:padding="5dp" />
+        android:textSize="15dp" />
 
     <TextView
         android:id="@+id/trip_content_feed"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textColor="@color/blue"
-        android:textSize="20dp"
-        android:padding="5dp" />
+        android:textSize="20dp" />
     
     <TextView
 		android:id="@+id/trip_content_comment_count_txt"

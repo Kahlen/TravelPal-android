@@ -29,6 +29,7 @@ public class TripContentFragment extends Fragment implements TripContentCallback
 	
 	final public static String TRIP_CONTENT_DESTINATION = "trip_content_destination";
 	final public static String TRIP_CONTENT_IID = "trip_content_iid";
+	final public static String TRIP_CONTENT_TRAVEL_TIME = "trip_content_travel_time";
 	
 	private Context mContext;
 	private View mRootView;
@@ -46,7 +47,8 @@ public class TripContentFragment extends Fragment implements TripContentCallback
 //	    int i = data.getInt(MainFragment.DRAWER_SELECTED_POSITION);
 //	    String title = getResources().getStringArray(R.array.activity_titles)[i];
 //	    getActivity().setTitle(title);
-	    getActivity().setTitle(data.getString(TRIP_CONTENT_DESTINATION));
+	    getActivity().getActionBar().setTitle(data.getString(TRIP_CONTENT_DESTINATION));
+	    getActivity().getActionBar().setSubtitle(data.getString(TRIP_CONTENT_TRAVEL_TIME));
 	    
 	    setCreateFeedBtn();
 	    initListView();
@@ -154,6 +156,12 @@ public class TripContentFragment extends Fragment implements TripContentCallback
 			e.printStackTrace();
 		}
 		
+	}
+
+	@Override
+	public void onDestroyView() {
+		super.onDestroyView();
+		getActivity().getActionBar().setSubtitle(null);
 	}
 
 }
