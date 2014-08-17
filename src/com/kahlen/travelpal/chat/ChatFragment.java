@@ -49,8 +49,9 @@ public class ChatFragment extends Fragment implements MQTTActivityCallBack, Chat
 		task.execute( userid, chatFriendId );
 		
 		topic2Publish = chatFriendId + "/" + userid + "/" + DrawerActivity.MQTTNotificationType.newChat.name();
-	    String title = getResources().getStringArray(R.array.activity_titles)[3];
-	    getActivity().setTitle(title);
+//	    String title = getResources().getStringArray(R.array.activity_titles)[3];
+//	    getActivity().setTitle(title);
+	    getActivity().setTitle(chatFriendId);
 	     
 	    setupContent();
 	    registerListener();

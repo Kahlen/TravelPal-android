@@ -3,7 +3,7 @@ package com.kahlen.travelpal.chat;
 public class FriendModel {
 
 	public String id = "";
-	String name = "";
+	public String name = "";
 	public boolean isFriend = false;
 	
 	public FriendModel( String userid, String n, boolean f ) {
