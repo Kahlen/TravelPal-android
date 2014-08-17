@@ -1,6 +1,8 @@
 package com.kahlen.travelpal.mytrip;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -78,7 +80,7 @@ public class TripContentFragment extends Fragment implements TripContentCallback
 						String feedInputTxt = editText.getText().toString();
 						editText.setText("");
 						
-						long feedTime = System.currentTimeMillis();
+						String feedTime = getCurrentCommentTimestamp();
 						JSONObject requestBody = new JSONObject();
 						try {
 							requestBody.put("_id", mIid);
@@ -122,7 +124,7 @@ public class TripContentFragment extends Fragment implements TripContentCallback
 		if ( sharedLink == null || sharedLink.isEmpty() )
 			return;
 		
-		long feedTime = System.currentTimeMillis();
+		String feedTime = getCurrentCommentTimestamp();
 		JSONObject requestBody = new JSONObject();
 		try {
 			requestBody.put("_id", mIid);
@@ -156,7 +158,7 @@ public class TripContentFragment extends Fragment implements TripContentCallback
 					JSONObject feedUserData = feedData.getJSONObject("user");
 					UserModel feedUser = new UserModel( feedUserData.getString("_id"), feedUserData.getString("password"), feedUserData.getString("name") );
 					String feedFeed = feedData.getString("feed");
-					long feedTimestamp = feedData.getLong("timestamp");
+					String feedTimestamp = feedData.getString("timestamp");
 					
 					ArrayList<TripContentCommentModel> commentModels = null;
 					if ( feedData.has("comments") ) {
@@ -189,6 +191,57 @@ public class TripContentFragment extends Fragment implements TripContentCallback
 	public void onDestroyView() {
 		super.onDestroyView();
 		getActivity().getActionBar().setSubtitle(null);
+	}
+	
+	private String getCurrentCommentTimestamp() {
+		SimpleDateFormat dataFormatter = new SimpleDateFormat("h:m:s dd M yyy"); //2:26:13 30 Jun 2014
+		String commetTime = dataFormatter.format(new Date());
+		String[] tmp = commetTime.split(" ");
+		String month = "Jan";
+		switch ( Integer.parseInt(tmp[tmp.length-2]) ) {
+			case 1:
+				month = "Jan";
+				break;
+			case 2:
+				month = "Feb";
+				break;
+			case 3:
+				month = "Mar";
+				break;
+			case 4:
+				month = "Apr";
+				break;
+			case 5:
+				month = "May";
+				break;
+			case 6:
+				month = "Jun";
+				break;
+			case 7:
+				month = "Jul";
+				break;
+			case 8:
+				month = "Aug";
+				break;
+			case 9:
+				month = "Sep";
+				break;
+			case 10:
+				month = "Oct";
+				break;
+			case 11:
+				month = "Nov";
+				break;
+			case 12:
+				month = "Dec";
+				break;	
+		}
+		tmp[tmp.length-2] = month;
+		StringBuilder result = new StringBuilder();
+		for ( String s: tmp ) {
+			result.append( s + " " );
+		}
+		return result.substring(0, result.length()-1).toString();
 	}
 
 }

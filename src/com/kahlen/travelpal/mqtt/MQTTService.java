@@ -248,7 +248,7 @@ public class MQTTService extends Service implements MqttCallback, MQTTTaskHandle
 			NotificationManager mNotifyMgr = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
 			NotificationCompat.Builder mBuilder =
 				    new NotificationCompat.Builder(mContext)
-				    .setSmallIcon(R.drawable.ic_launcher)
+				    .setSmallIcon(R.drawable.play_logo)
 				    .setAutoCancel(true)
 				    .setContentTitle("TravelPal")
 				    .setContentText(notificationContent)

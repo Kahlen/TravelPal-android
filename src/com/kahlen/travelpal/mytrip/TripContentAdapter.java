@@ -62,6 +62,9 @@ public class TripContentAdapter extends ArrayAdapter<TripContentFeedModel> {
 			feedFeedTxt.setText( contentModel.feed );
 		}
 		
+		TextView feedTimetxt = (TextView) convertView.findViewById( R.id.trip_content_feed_time );
+		feedTimetxt.setText( contentModel.timestamp );
+		
 		TextView seeCommentTxt = (TextView) convertView.findViewById(R.id.trip_content_comment_count_txt);
 		if ( contentModel.hasComments() ) {
 			seeCommentTxt.setText( mContext.getResources().getString( R.string.see_comment ) + " :" + contentModel.commentCount() );
@@ -100,6 +103,8 @@ public class TripContentAdapter extends ArrayAdapter<TripContentFeedModel> {
 						commentAdapter.notifyDataSetChanged();
 						// send comment to server
 						sendComment2Server(newComment, position);
+						contentModel.comments.add(newComment);
+						notifyDataSetChanged();
 					}
 					
 				});
@@ -201,6 +206,9 @@ public class TripContentAdapter extends ArrayAdapter<TripContentFeedModel> {
 			
 			TextView commentTxt = (TextView) convertView.findViewById( R.id.trip_content_comment_txt );
 			commentTxt.setText( commentModel.user.name + " (" + commentModel.user.id + "): " + commentModel.comment );
+			
+			TextView commentTimeTxt = (TextView) convertView.findViewById( R.id.trip_content_comment_time_txt );
+			commentTimeTxt.setText( commentModel.timestamp );
 			
 			return convertView;
 		}

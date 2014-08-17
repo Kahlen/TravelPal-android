@@ -10,5 +10,14 @@
         android:layout_height="wrap_content"
         android:textSize="15dp"
         android:padding="5dp" />
+    <TextView
+        android:id="@+id/trip_content_comment_time_txt"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/gray"
+        android:textSize="10dp"
+        android:paddingRight="5dp"
+        android:paddingLeft="5dp"
+        android:paddingBottom="5dp" />
 
 </LinearLayout>
